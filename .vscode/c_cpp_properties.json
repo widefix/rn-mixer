@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/homebrew/Cellar/libsndfile/1.2.2/include", // Path to libsndfile headers
+                "/opt/homebrew/Cellar/portaudio/19.7.0/include" // Path to PortAudio headers
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "clang-x64",
+            "compilerArgs": [
+                "-stdlib=libc++", // Specify the C++ standard library
+                "-L/opt/homebrew/Cellar/libsndfile/1.2.2/lib", // Library path for libsndfile
+                "-L/opt/homebrew/Cellar/portaudio/19.7.0/lib", // Library path for PortAudio
+                "-lsndfile", // Link against libsndfile library
+                "-lportaudio" // Link against PortAudio library
+            ]
+        }
+    ],
+    "version": 4
+}
