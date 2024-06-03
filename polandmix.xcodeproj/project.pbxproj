@@ -14,6 +14,8 @@
 		E5B71B402C07519E00EB32B7 /* polandmixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B3F2C07519E00EB32B7 /* polandmixTests.swift */; };
 		E5B71B4A2C07519E00EB32B7 /* polandmixUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B492C07519E00EB32B7 /* polandmixUITests.swift */; };
 		E5B71B4C2C07519E00EB32B7 /* polandmixUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B4B2C07519E00EB32B7 /* polandmixUITestsLaunchTests.swift */; };
+		E5B71B592C0751CA00EB32B7 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B582C0751CA00EB32B7 /* AudioManager.swift */; };
+		E5B71B5B2C0751F900EB32B7 /* AudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B5A2C0751F900EB32B7 /* AudioVisualizer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E5111AB12C07A1AD002B74A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E5B71B2B2C07519C00EB32B7 /* polandmix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = polandmix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5B71B2E2C07519C00EB32B7 /* polandmixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = polandmixApp.swift; sourceTree = "<group>"; };
 		E5B71B302C07519C00EB32B7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +47,8 @@
 		E5B71B452C07519E00EB32B7 /* polandmixUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = polandmixUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5B71B492C07519E00EB32B7 /* polandmixUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = polandmixUITests.swift; sourceTree = "<group>"; };
 		E5B71B4B2C07519E00EB32B7 /* polandmixUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = polandmixUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E5B71B582C0751CA00EB32B7 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		E5B71B5A2C0751F900EB32B7 /* AudioVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVisualizer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +99,11 @@
 		E5B71B2D2C07519C00EB32B7 /* polandmix */ = {
 			isa = PBXGroup;
 			children = (
+				E5111AB12C07A1AD002B74A3 /* Info.plist */,
 				E5B71B2E2C07519C00EB32B7 /* polandmixApp.swift */,
 				E5B71B302C07519C00EB32B7 /* ContentView.swift */,
+				E5B71B5A2C0751F900EB32B7 /* AudioVisualizer.swift */,
+				E5B71B582C0751CA00EB32B7 /* AudioManager.swift */,
 				E5B71B322C07519E00EB32B7 /* Assets.xcassets */,
 				E5B71B342C07519E00EB32B7 /* Preview Content */,
 			);
@@ -257,6 +265,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B71B5B2C0751F900EB32B7 /* AudioVisualizer.swift in Sources */,
+				E5B71B592C0751CA00EB32B7 /* AudioManager.swift in Sources */,
 				E5B71B312C07519C00EB32B7 /* ContentView.swift in Sources */,
 				E5B71B2F2C07519C00EB32B7 /* polandmixApp.swift in Sources */,
 			);
@@ -419,12 +429,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"polandmix/Preview Content\"";
-				DEVELOPMENT_TEAM = 53ZUS6YH3H;
+				DEVELOPMENT_TEAM = M587F35NF2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = polandmix/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -435,11 +448,16 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = test.polandmix;
+				PRODUCT_BUNDLE_IDENTIFIER = polandmix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -448,12 +466,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"polandmix/Preview Content\"";
-				DEVELOPMENT_TEAM = 53ZUS6YH3H;
+				DEVELOPMENT_TEAM = M587F35NF2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = polandmix/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -464,11 +485,16 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = test.polandmix;
+				PRODUCT_BUNDLE_IDENTIFIER = polandmix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
