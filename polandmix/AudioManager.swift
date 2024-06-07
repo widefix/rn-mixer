@@ -9,22 +9,46 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
     @Published var audioFileURLs: [String: URL] = [:]
     @Published var audioProperties: [String] = []
     @Published var audiosVolumesSliderValues: [String: Double] = [:]
+    @Published var audiosPanSliderValues: [String: Double] = [:]
+    @Published var audioProgressValues: Double = 0
+    @Published var audioValues: [String: Double] = [:]
     @Published var audioAmplitudes: [String: [Float]] = [:]
-    @Published var isMixBtnClicked:Bool = false
-
+    @Published var isMixBtnClicked: Bool = false
+    @Published var isMixPaused: Bool = false
+    @Published var isMasterControlShowing: Bool = false
+    private var players: [String: AVAudioPlayer] = [:]
+    private var pausedTime:TimeInterval = 0.0
+    private var playerDeviceCurrTime:TimeInterval = 0.0
+    private var progressUpdateTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private var amplitudeTimers: [String: Timer] = [:]
     private var audioEngine = AVAudioEngine()
     
+    func startProgressUpdateTimer() {
+        progressUpdateTimer?.invalidate()
+        progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            self?.updateProgress()
+        }
+    }
+
+    func updateProgress() {
+        guard let player = audioPlayers.values.first else { return }
+        let progress = player.currentTime / player.duration
+        DispatchQueue.main.async {
+            self.audioProgressValues = progress
+        }
+    }
+    
     override init() {
-           super.init()// Set up observer for playback end
+        super.init()
         // Set up observer for app lifecycle events
-                NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-                NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-       }
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+    }
     
     // Function to pick audio files
     func pickAudioFile() {
+        resetApp()
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
             return
         }
@@ -39,6 +63,12 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         for url in urls {
             let fileName = url.lastPathComponent
+            // Ensure the file can be accessed and read
+            guard FileManager.default.isReadableFile(atPath: url.path) else {
+                print("File not accessible: \(fileName)")
+                continue
+            }
+            
             audioFileURLs[fileName] = url
             getAudioProperties(for: url)
         }
@@ -65,6 +95,8 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
                     let fileName = url.lastPathComponent
                     self.audioProperties.append(fileName)
                     self.audiosVolumesSliderValues[fileName] = 0.5
+                    self.audiosPanSliderValues[fileName] = 0.5
+                    self.audioProgressValues = 0
                     self.audioAmplitudes[fileName] = Array(repeating: 0.0, count: 10)
                 }
             } catch {
@@ -73,13 +105,32 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         }
     }
     
+    func pauseResumeMix() {
+        isMixPaused.toggle()
+        
+        if isMixPaused {
+            for player in players.values {
+                pausedTime = Double(floor((pausedTime + player.currentTime) / 2))
+                playerDeviceCurrTime = player.deviceCurrentTime
+                player.pause()
+            }
+            print("All players paused successfully \(pausedTime)")
+        } else {
+    
+            for (_, player) in players {
+               
+                player.currentTime = pausedTime - 2.5
+                player.play(atTime: playerDeviceCurrTime)
+            }
+        }
+    }
+
     func playAudio() {
+        startProgressUpdateTimer()
         isMixBtnClicked = false
         DispatchQueue.global(qos: .userInitiated).async {
-            var players: [String: AVAudioPlayer] = [:]
             let dispatchGroup = DispatchGroup()
 
-            // Create and prepare AVAudioPlayer instances
             for (fileName, url) in self.audioFileURLs {
                 dispatchGroup.enter()
 
@@ -88,7 +139,7 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
                     player.numberOfLoops = 0
                     player.isMeteringEnabled = true
                     player.delegate = self
-                    players[fileName] = player
+                    self.players[fileName] = player
                     player.prepareToPlay()
                     dispatchGroup.leave()
                 } catch {
@@ -97,21 +148,24 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
                 }
             }
 
-            // Ensure all players are prepared before starting playback
             dispatchGroup.notify(queue: .main) {
-                let startDelay: TimeInterval = 0.5 // Delay to ensure all players are ready
-                          let startTime = players.values.first?.deviceCurrentTime ?? 0 + startDelay
-                          
-                          // Start all players simultaneously
-                          players.forEach { (fileName, player) in
-                              player.play(atTime: startTime)
-                              self.audioPlayers[fileName] = player
-                              self.startAmplitudeUpdate(for: fileName)
-                          }
+                let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
+                let startTime = self.players.values.first?.deviceCurrentTime ?? startDelay
+                
+                print("\(startTime) ::::: This is the start-time init :::::")
+
+                self.players.forEach { (fileName, player) in
+                    player.currentTime = 0.0
+                    player.play(atTime: startTime + startDelay)
+                    
+                    self.audioPlayers[fileName] = player
+                    self.startAmplitudeUpdate(for: fileName)
+                }
             }
         }
+        
+        isMasterControlShowing = true
     }
-
 
     func startAmplitudeUpdate(for fileName: String) {
         amplitudeTimers[fileName]?.invalidate() // Invalidate any existing timer
@@ -137,7 +191,37 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
             self.audioAmplitudes[fileName] = amplitudes
         }
     }
+    
+    func setPlaybackPosition(for fileName: String, to progress: Double) {
+        guard let player = audioPlayers[fileName] else { return }
+        let duration = player.duration
+        let newTime = progress * duration
 
+        // Updating player time on the main thread to ensure sync
+        DispatchQueue.main.sync {
+            player.currentTime = newTime
+        }
+    }
+
+
+    
+    func setAudioProgress(point: Double) {
+        audioProgressValues = point
+//        for (fileName, player) in audioPlayers {
+//                setPlaybackPosition(for: fileName, to: point)
+//            }
+    }
+
+    func editPanX(pan:Float, fileName: String) {
+        guard let player = audioPlayers[fileName] else {
+            print("Player does not exist for \(fileName)")
+            return
+        }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            player.pan = pan
+        }
+    }
     func editVolumeX(volume: Float, fileName: String) {
         guard let player = audioPlayers[fileName] else {
             print("Player does not exist for \(fileName)")
@@ -149,34 +233,47 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         }
     }
     
-    // Function to reset the entire app to default state
-        func resetApp() {
+    func resetApp() {
+            progressUpdateTimer?.invalidate() //
+            audioEngine.reset()
+            players.removeAll()
+            // Stop all audio players
             audioPlayers.values.forEach { $0.stop() }
+            
+            // Invalidate amplitude update timers
             amplitudeTimers.values.forEach { $0.invalidate() }
 
+            // Clear dictionaries and arrays
             audioPlayers.removeAll()
             audioFileURLs.removeAll()
             audioProperties.removeAll()
             audiosVolumesSliderValues.removeAll()
             audioAmplitudes.removeAll()
+            pausedTime = 0.0
+            playerDeviceCurrTime = 0.0
 
+            // Reset flags
             isMixBtnClicked = false
-        }
+            isMixPaused = false
+            isMasterControlShowing = false
+        
+    }
+
 
     // AVAudioPlayerDelegate method to handle playback end
-        func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-            // Call resetApp after a delay of 1.5 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-                self.resetApp()
-            }
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // Call resetApp after a delay of 1.5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            self.resetApp()
         }
+    }
 
-        // App lifecycle event handlers
-        @objc func appDidEnterBackground() {
-            resetApp()
-        }
+    // App lifecycle event handlers
+    @objc func appDidEnterBackground() {
+        resetApp()
+    }
 
-        @objc func appWillTerminate() {
-            resetApp()
-        }
+    @objc func appWillTerminate() {
+        resetApp()
+    }
 }
