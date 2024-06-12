@@ -110,17 +110,21 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         
         if isMixPaused {
             for player in players.values {
-                pausedTime = Double(floor((pausedTime + player.currentTime) / 2))
-                playerDeviceCurrTime = player.deviceCurrentTime
-                player.pause()
-            }
-            print("All players paused successfully \(pausedTime)")
-        } else {
-    
-            for (_, player) in players {
                
-                player.currentTime = pausedTime - 2.5
-                player.play(atTime: playerDeviceCurrTime)
+                player.pause()
+                pausedTime = player.currentTime
+                playerDeviceCurrTime = player.deviceCurrentTime
+            }
+            print("All players paused successfully \(pausedTime) \(playerDeviceCurrTime)")
+        } else {
+                let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
+                let startTime = players.values.first?.deviceCurrentTime ?? startDelay
+                
+                print("\(startTime) ::::: This is the start-time init :::::")
+
+            players.forEach { (_, player) in
+                player.currentTime = pausedTime
+                player.play(atTime: startTime + startDelay)
             }
         }
     }
@@ -192,24 +196,42 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         }
     }
     
-    func setPlaybackPosition(for fileName: String, to progress: Double) {
-        guard let player = audioPlayers[fileName] else { return }
-        let duration = player.duration
-        let newTime = progress * duration
+    func setPlaybackPosition(to progress: Double) {
+//         
+          let duration = players.values.first?.duration ?? 0.00
+          let newTime = progress * duration
+ 
+        let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
+        let startTime = players.values.first?.deviceCurrentTime ?? startDelay
+        
+        print("\(startTime) ::::: This is the start-time init :::::")
 
-        // Updating player time on the main thread to ensure sync
-        DispatchQueue.main.sync {
-            player.currentTime = newTime
-        }
+            players.forEach {  (_, player) in
+                player.currentTime = newTime
+                player.play(atTime: (startTime) + startDelay)
+            }
+        startProgressUpdateTimer()
+        isMixPaused.toggle()
     }
 
 
+    func audioSliderChanged(point:Double) {
+        print("Audio slider just changed to ---> ", point)
+        setPlaybackPosition(to: Double(point))
+    }
     
     func setAudioProgress(point: Double) {
-        audioProgressValues = point
-//        for (fileName, player) in audioPlayers {
-//                setPlaybackPosition(for: fileName, to: point)
-//            }
+        isMixPaused = true
+        if  isMixPaused {
+            for player in players.values {
+                player.pause()
+                pausedTime = player.currentTime
+                playerDeviceCurrTime = player.deviceCurrentTime
+            }
+            
+            audioProgressValues = point
+            progressUpdateTimer?.invalidate() //
+        }
     }
 
     func editPanX(pan:Float, fileName: String) {

@@ -26,10 +26,15 @@ struct ContentView: View {
                                     audioManager.audioProgressValues = newValue
                                     audioManager.setAudioProgress(point: newValue)
                                 }
-                            ), in: 0...1, step: 0.01)
+                            ), in: 0...1, step: 0.01,
+                            onEditingChanged: {
+                                isEditing in
+                                if !isEditing  {
+                                    audioManager.audioSliderChanged(point: audioManager.audioProgressValues)
+                                }
+                            })
                             .padding(.horizontal)
                             .accentColor(.blue)
-                            .allowsHitTesting(true)
                     }
                     
                     

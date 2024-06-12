@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E5690B0F2C130AAE001073CF /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5AF35A22C11D5E20047DFCF /* UserNotifications.framework */; };
+		E5AD10E22C1723AE00101824 /* AudioSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AD10E12C1723AE00101824 /* AudioSlider.swift */; };
 		E5B71B2F2C07519C00EB32B7 /* polandmixApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B2E2C07519C00EB32B7 /* polandmixApp.swift */; };
 		E5B71B312C07519C00EB32B7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B71B302C07519C00EB32B7 /* ContentView.swift */; };
 		E5B71B332C07519E00EB32B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5B71B322C07519E00EB32B7 /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 		E5111AB12C07A1AD002B74A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E5690B0E2C130A79001073CF /* polandmix.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = polandmix.entitlements; sourceTree = "<group>"; };
 		E5690B102C130AAF001073CF /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		E5AD10E12C1723AE00101824 /* AudioSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSlider.swift; sourceTree = "<group>"; };
 		E5AF35A22C11D5E20047DFCF /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		E5B71B2B2C07519C00EB32B7 /* polandmix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = polandmix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5B71B2E2C07519C00EB32B7 /* polandmixApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = polandmixApp.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		E5B71B2D2C07519C00EB32B7 /* polandmix */ = {
 			isa = PBXGroup;
 			children = (
+				E5AD10E12C1723AE00101824 /* AudioSlider.swift */,
 				E5690B0E2C130A79001073CF /* polandmix.entitlements */,
 				E5111AB12C07A1AD002B74A3 /* Info.plist */,
 				E5B71B2E2C07519C00EB32B7 /* polandmixApp.swift */,
@@ -284,6 +287,7 @@
 				E5B71B5B2C0751F900EB32B7 /* AudioVisualizer.swift in Sources */,
 				E5B71B592C0751CA00EB32B7 /* AudioManager.swift in Sources */,
 				E5B71B312C07519C00EB32B7 /* ContentView.swift in Sources */,
+				E5AD10E22C1723AE00101824 /* AudioSlider.swift in Sources */,
 				E5B71B2F2C07519C00EB32B7 /* polandmixApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
