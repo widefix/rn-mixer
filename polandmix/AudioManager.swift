@@ -4,7 +4,7 @@ import MobileCoreServices
 import UIKit
 import Combine
 
-class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudioPlayerDelegate {
+class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var audioPlayers: [String: AVAudioPlayer] = [:]
     @Published var audioFileURLs: [String: URL] = [:]
     @Published var audioProperties: [String] = []
@@ -16,13 +16,28 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
     @Published var isMixBtnClicked: Bool = false
     @Published var isMixPaused: Bool = false
     @Published var isMasterControlShowing: Bool = false
+    @Published var downloadProgress: Double = 0
     private var players: [String: AVAudioPlayer] = [:]
-    private var pausedTime:TimeInterval = 0.0
-    private var playerDeviceCurrTime:TimeInterval = 0.0
+    private var pausedTime: TimeInterval = 0.0
+    private var playerDeviceCurrTime: TimeInterval = 0.0
     private var progressUpdateTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private var amplitudeTimers: [String: Timer] = [:]
     private var audioEngine = AVAudioEngine()
+    
+    // Predefined list of URLs
+    private let audioFileURLsList: [URL] = [
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/226/original/Way_Maker__0_-_E_-_Original_--_1-Click.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/228/original/Way_Maker__0_-_E_-_Original_--_2-Guide.m4a")!, 
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/236/original/Way_Maker__0_-_E_-_Original_--_11-Lead_Vox.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/227/original/Way_Maker__0_-_E_-_Original_--_3-Drums.m4a")!,URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/229/original/Way_Maker__0_-_E_-_Original_--_4-Percussion.m4a")!,URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/232/original/Way_Maker__0_-_E_-_Original_--_5-Bass.m4a")!,URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/230/original/Way_Maker__0_-_E_-_Original_--_6-Acoustic.m4a")!,URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/234/original/Way_Maker__0_-_E_-_Original_--_7-Electric_1.m4a")!,URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/235/original/Way_Maker__0_-_E_-_Original_--_8-Electric_2.m4a")!,
+         URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/237/original/Way_Maker__0_-_E_-_Original_--_9-Main_Keys.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/231/original/Way_Maker__0_-_E_-_Original_--_10-Aux_Keys.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/238/original/Way_Maker__0_-_E_-_Original_--_12-Soprano_Vox.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/239/original/Way_Maker__0_-_E_-_Original_--_13-Tenor_Vox.m4a")!,
+        URL(string: "https://cdn.worshiponline.com/estp-public/song_audio_mixer_tracks/audios/000/034/233/original/Way_Maker__0_-_E_-_Original_--_14-Choir.m4a")!,
+        
+    ]
     
     func startProgressUpdateTimer() {
         progressUpdateTimer?.invalidate()
@@ -39,41 +54,23 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         }
     }
     
+    // Function to configure the audio session
+    private func configureAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error.localizedDescription)")
+        }
+    }
+    
     override init() {
         super.init()
+        configureAudioSession()
         // Set up observer for app lifecycle events
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-    }
-    
-    // Function to pick audio files
-    func pickAudioFile() {
-        resetApp()
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return
-        }
-
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.audio], asCopy: true)
-        documentPicker.delegate = self
-        documentPicker.allowsMultipleSelection = true
-        windowScene.windows.first?.rootViewController?.present(documentPicker, animated: true, completion: nil)
-    }
-
-    // UIDocumentPickerDelegate method
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        for url in urls {
-            let fileName = url.lastPathComponent
-            // Ensure the file can be accessed and read
-            guard FileManager.default.isReadableFile(atPath: url.path) else {
-                print("File not accessible: \(fileName)")
-                continue
-            }
-            
-            audioFileURLs[fileName] = url
-            getAudioProperties(for: url)
-        }
-        
-        isMixBtnClicked = true
     }
 
     // Function to get properties of the audio file
@@ -104,23 +101,67 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
             }
         }
     }
-    
+
+    // Function to download audio files from URLs
+    func downloadAudioFiles() {
+        resetApp()
+        let urls = audioFileURLsList
+        let totalFiles = urls.count
+        var downloadedFiles = 0
+
+        let dispatchGroup = DispatchGroup()
+        
+        for url in urls {
+            dispatchGroup.enter()
+            let fileName = url.lastPathComponent
+            
+            let downloadTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data, error == nil else {
+                    print("Failed to download file: \(error?.localizedDescription ?? "Unknown error")")
+                    dispatchGroup.leave()
+                    return
+                }
+                
+                do {
+                    let player = try AVAudioPlayer(data: data)
+                    player.prepareToPlay()
+                    DispatchQueue.main.async {
+                        self.audioPlayers[fileName] = player
+                        self.getAudioProperties(for: url)
+                        downloadedFiles += 1
+                        self.downloadProgress = Double(downloadedFiles) / Double(totalFiles)
+                    }
+                    dispatchGroup.leave()
+                } catch {
+                    print("Error creating audio player for \(fileName): \(error.localizedDescription)")
+                    dispatchGroup.leave()
+                }
+            }
+            
+            downloadTask.resume()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.isMixBtnClicked = true
+            self.downloadProgress = 1.0
+        }
+    }
+
     func pauseResumeMix() {
         isMixPaused.toggle()
         
         if isMixPaused {
             for player in players.values {
-               
                 player.pause()
                 pausedTime = player.currentTime
                 playerDeviceCurrTime = player.deviceCurrentTime
             }
             print("All players paused successfully \(pausedTime) \(playerDeviceCurrTime)")
         } else {
-                let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
-                let startTime = players.values.first?.deviceCurrentTime ?? startDelay
-                
-                print("\(startTime) ::::: This is the start-time init :::::")
+            let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
+            let startTime = players.values.first?.deviceCurrentTime ?? startDelay
+            
+            print("\(startTime) ::::: This is the start-time init :::::")
 
             players.forEach { (_, player) in
                 player.currentTime = pausedTime
@@ -135,21 +176,15 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         DispatchQueue.global(qos: .userInitiated).async {
             let dispatchGroup = DispatchGroup()
 
-            for (fileName, url) in self.audioFileURLs {
+            for (fileName, player) in self.audioPlayers {
                 dispatchGroup.enter()
-
-                do {
-                    let player = try AVAudioPlayer(contentsOf: url)
-                    player.numberOfLoops = 0
-                    player.isMeteringEnabled = true
-                    player.delegate = self
-                    self.players[fileName] = player
-                    player.prepareToPlay()
-                    dispatchGroup.leave()
-                } catch {
-                    print("Error creating audio player for \(fileName): \(error.localizedDescription)")
-                    dispatchGroup.leave()
-                }
+                
+                player.numberOfLoops = 0
+                player.isMeteringEnabled = true
+                player.delegate = self
+                self.players[fileName] = player
+                player.prepareToPlay()
+                dispatchGroup.leave()
             }
 
             dispatchGroup.notify(queue: .main) {
@@ -162,7 +197,6 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
                     player.currentTime = 0.0
                     player.play(atTime: startTime + startDelay)
                     
-                    self.audioPlayers[fileName] = player
                     self.startAmplitudeUpdate(for: fileName)
                 }
             }
@@ -197,32 +231,30 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
     }
     
     func setPlaybackPosition(to progress: Double) {
-//         
-          let duration = players.values.first?.duration ?? 0.00
-          let newTime = progress * duration
- 
-        let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
+        let duration = players.values.first?.duration ?? 0.00
+        let newTime = progress * duration
+
+        let startDelay: TimeInterval = 0.25 // Delay to ensure all players are ready
         let startTime = players.values.first?.deviceCurrentTime ?? startDelay
         
         print("\(startTime) ::::: This is the start-time init :::::")
 
-            players.forEach {  (_, player) in
-                player.currentTime = newTime
-                player.play(atTime: (startTime) + startDelay)
-            }
+        players.forEach {  (_, player) in
+            player.currentTime = newTime
+            player.play(atTime: (startTime) + startDelay)
+        }
         startProgressUpdateTimer()
         isMixPaused.toggle()
     }
 
-
-    func audioSliderChanged(point:Double) {
+    func audioSliderChanged(point: Double) {
         print("Audio slider just changed to ---> ", point)
         setPlaybackPosition(to: Double(point))
     }
     
     func setAudioProgress(point: Double) {
         isMixPaused = true
-        if  isMixPaused {
+        if isMixPaused {
             for player in players.values {
                 player.pause()
                 pausedTime = player.currentTime
@@ -234,7 +266,7 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
         }
     }
 
-    func editPanX(pan:Float, fileName: String) {
+    func editPanX(pan: Float, fileName: String) {
         guard let player = audioPlayers[fileName] else {
             print("Player does not exist for \(fileName)")
             return
@@ -244,6 +276,7 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
             player.pan = pan
         }
     }
+    
     func editVolumeX(volume: Float, fileName: String) {
         guard let player = audioPlayers[fileName] else {
             print("Player does not exist for \(fileName)")
@@ -256,31 +289,29 @@ class AudioManager: NSObject, ObservableObject, UIDocumentPickerDelegate, AVAudi
     }
     
     func resetApp() {
-            progressUpdateTimer?.invalidate() //
-            audioEngine.reset()
-            players.removeAll()
-            // Stop all audio players
-            audioPlayers.values.forEach { $0.stop() }
-            
-            // Invalidate amplitude update timers
-            amplitudeTimers.values.forEach { $0.invalidate() }
-
-            // Clear dictionaries and arrays
-            audioPlayers.removeAll()
-            audioFileURLs.removeAll()
-            audioProperties.removeAll()
-            audiosVolumesSliderValues.removeAll()
-            audioAmplitudes.removeAll()
-            pausedTime = 0.0
-            playerDeviceCurrTime = 0.0
-
-            // Reset flags
-            isMixBtnClicked = false
-            isMixPaused = false
-            isMasterControlShowing = false
+        progressUpdateTimer?.invalidate()
+        audioEngine.reset()
+        players.removeAll()
+        // Stop all audio players
+        audioPlayers.values.forEach { $0.stop() }
         
-    }
+        // Invalidate amplitude update timers
+        amplitudeTimers.values.forEach { $0.invalidate() }
 
+        // Clear dictionaries and arrays
+        audioPlayers.removeAll()
+        audioFileURLs.removeAll()
+        audioProperties.removeAll()
+        audiosVolumesSliderValues.removeAll()
+        audioAmplitudes.removeAll()
+        pausedTime = 0.0
+        playerDeviceCurrTime = 0.0
+
+        // Reset flags
+        isMixBtnClicked = false
+        isMixPaused = false
+        isMasterControlShowing = false
+    }
 
     // AVAudioPlayerDelegate method to handle playback end
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
