@@ -15,7 +15,7 @@ struct ContentView: View {
                         }
                         .padding()
                     }
-                    Text("Downloading... \(Int(audioManager.downloadProgress * 100))%")
+                   if isDownloadButtonClicked {Text("Downloading... \(Int(audioManager.downloadProgress * 100))%")}
                     ProgressView(value: audioManager.downloadProgress)
                         .progressViewStyle(LinearProgressViewStyle())
                         .padding()
