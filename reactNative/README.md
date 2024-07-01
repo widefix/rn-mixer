@@ -150,7 +150,8 @@ To install the `Armsaudio` module, follow these steps:
 
 ### Usage
 
-```
+```javascript
+
 import * as React from 'react';
 import { StyleSheet, View, Text, Button, NativeEventEmitter } from 'react-native';
 import * as xmod from "armsaudio";
