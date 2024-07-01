@@ -15,6 +15,10 @@ RCT_EXTERN_METHOD(setVolume:(float)volume forFileName:(NSString *)fileName)
 
 RCT_EXTERN_METHOD(setPan:(float)pan forFileName:(NSString *)fileName)
 
+RCT_EXTERN_METHOD(setAudioProgress:(double)point)
+
+RCT_EXTERN_METHOD(audioSliderChanged:(double)point)
+
 RCT_EXTERN_METHOD(downloadAudioFiles:(NSArray<NSString *> *)urlStrings)
 
 + (BOOL)requiresMainQueueSetup
