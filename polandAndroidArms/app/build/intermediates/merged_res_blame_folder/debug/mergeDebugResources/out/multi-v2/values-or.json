@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.polandandroidarms.app-mergeDebugResources-42:/values-or/values-or.xml",
+            "outputFile": "com.example.polandandroidarms.app-mergeDebugResources-46:/values-or/values-or.xml",
             "map": [
                 {
                     "source": "/Users/greatarmstrong/.gradle/caches/transforms-4/7ee716bfe69f7e0c50e511dda73de528/transformed/material3-1.1.1/res/values-or/values-or.xml",

@@ -35,6 +35,16 @@ MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/greatarmstrong/.gradle
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/fc756228a9a4fcd672f83c6d2941c860/transformed/lifecycle-viewmodel-savedstate-2.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/b336e81a19cb6f56969968113ba1771c/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.core:core-ktx:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/754c554d96499f7375a62945ba364fe0/transformed/core-ktx-1.10.1/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/082c2b582e451f5aae82dde696307335/transformed/exoplayer-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ea9b8712a83b087b9800ab4ab04bfebf/transformed/exoplayer-dash-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/64cbce3c0c472cc93e8566cf2b2d2d89/transformed/exoplayer-hls-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b8ebc1e5cead6423c7ea9a231a5759c/transformed/exoplayer-rtsp-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/39ef55278851e2b1e71f051aae49cc4e/transformed/exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/76712be219a39f39a64666add14d36da/transformed/exoplayer-core-2.18.5/AndroidManifest.xml:17:1-26:12
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ac8ddf2c64cebf3fc1f20c833b616916/transformed/exoplayer-ui-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/2b935c567d25c20571c697115636544b/transformed/recyclerview-1.2.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6c16ef5feb00aa9a5250172a9119a08d/transformed/media-1.6.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/3027c81485f80e7c23845067fd012914/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/87893656bded1f849d3994c9f497ea61/transformed/autofill-1.0.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.core:core:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/7980dee923f7b7c9157ec00342eb7aee/transformed/core-1.10.1/AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/c180ef7e693dbdfeebbbfb2965020b49/transformed/lifecycle-runtime-2.6.1/AndroidManifest.xml:2:1-7:12
@@ -42,6 +52,11 @@ MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.1] /Users/greatarmstro
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.5.0] /Users/greatarmstrong/.gradle/caches/transforms-4/91d56f5ce3e98f1fcad0a346e0b2aabe/transformed/runtime-saveable-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-android:1.5.0] /Users/greatarmstrong/.gradle/caches/transforms-4/8192c76f3717b6594f5976092177e917/transformed/runtime-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/greatarmstrong/.gradle/caches/transforms-4/52c4f19ef552636849b6b161cfc45c2e/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/73b6987468181a0122816edb796f8c86/transformed/exoplayer-datasource-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/41c78cdc9ed0c11fc1954fb55d8639c7/transformed/exoplayer-database-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/6e02cb0bf90c0a648118f15dc9e4dd62/transformed/exoplayer-extractor-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c3f391f2d318db838232685a2148bc19/transformed/exoplayer-decoder-2.18.5/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/740a8364b4eb6324f87b88865722558c/transformed/exoplayer-common-2.18.5/AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/c1a5ad3339a26225bd8ace6ee2a955ea/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/greatarmstrong/.gradle/caches/transforms-4/1531931a529813c446fef3b35a544e0f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/greatarmstrong/.gradle/caches/transforms-4/1f2389911a64e62032a0151be53d2e06/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
@@ -193,6 +208,26 @@ MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/great
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/b336e81a19cb6f56969968113ba1771c/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.core:core-ktx:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/754c554d96499f7375a62945ba364fe0/transformed/core-ktx-1.10.1/AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/754c554d96499f7375a62945ba364fe0/transformed/core-ktx-1.10.1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/082c2b582e451f5aae82dde696307335/transformed/exoplayer-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/082c2b582e451f5aae82dde696307335/transformed/exoplayer-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ea9b8712a83b087b9800ab4ab04bfebf/transformed/exoplayer-dash-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ea9b8712a83b087b9800ab4ab04bfebf/transformed/exoplayer-dash-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/64cbce3c0c472cc93e8566cf2b2d2d89/transformed/exoplayer-hls-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/64cbce3c0c472cc93e8566cf2b2d2d89/transformed/exoplayer-hls-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b8ebc1e5cead6423c7ea9a231a5759c/transformed/exoplayer-rtsp-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b8ebc1e5cead6423c7ea9a231a5759c/transformed/exoplayer-rtsp-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/39ef55278851e2b1e71f051aae49cc4e/transformed/exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/39ef55278851e2b1e71f051aae49cc4e/transformed/exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/76712be219a39f39a64666add14d36da/transformed/exoplayer-core-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/76712be219a39f39a64666add14d36da/transformed/exoplayer-core-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ac8ddf2c64cebf3fc1f20c833b616916/transformed/exoplayer-ui-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ac8ddf2c64cebf3fc1f20c833b616916/transformed/exoplayer-ui-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/2b935c567d25c20571c697115636544b/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/2b935c567d25c20571c697115636544b/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6c16ef5feb00aa9a5250172a9119a08d/transformed/media-1.6.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6c16ef5feb00aa9a5250172a9119a08d/transformed/media-1.6.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/3027c81485f80e7c23845067fd012914/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/3027c81485f80e7c23845067fd012914/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/87893656bded1f849d3994c9f497ea61/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/87893656bded1f849d3994c9f497ea61/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/7980dee923f7b7c9157ec00342eb7aee/transformed/core-1.10.1/AndroidManifest.xml:20:5-44
@@ -207,6 +242,16 @@ MERGED from [androidx.compose.runtime:runtime-android:1.5.0] /Users/greatarmstro
 MERGED from [androidx.compose.runtime:runtime-android:1.5.0] /Users/greatarmstrong/.gradle/caches/transforms-4/8192c76f3717b6594f5976092177e917/transformed/runtime-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/greatarmstrong/.gradle/caches/transforms-4/52c4f19ef552636849b6b161cfc45c2e/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/greatarmstrong/.gradle/caches/transforms-4/52c4f19ef552636849b6b161cfc45c2e/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/73b6987468181a0122816edb796f8c86/transformed/exoplayer-datasource-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/73b6987468181a0122816edb796f8c86/transformed/exoplayer-datasource-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/41c78cdc9ed0c11fc1954fb55d8639c7/transformed/exoplayer-database-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/41c78cdc9ed0c11fc1954fb55d8639c7/transformed/exoplayer-database-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/6e02cb0bf90c0a648118f15dc9e4dd62/transformed/exoplayer-extractor-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/6e02cb0bf90c0a648118f15dc9e4dd62/transformed/exoplayer-extractor-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c3f391f2d318db838232685a2148bc19/transformed/exoplayer-decoder-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c3f391f2d318db838232685a2148bc19/transformed/exoplayer-decoder-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/740a8364b4eb6324f87b88865722558c/transformed/exoplayer-common-2.18.5/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/740a8364b4eb6324f87b88865722558c/transformed/exoplayer-common-2.18.5/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/c1a5ad3339a26225bd8ace6ee2a955ea/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/c1a5ad3339a26225bd8ace6ee2a955ea/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/greatarmstrong/.gradle/caches/transforms-4/1531931a529813c446fef3b35a544e0f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
@@ -263,6 +308,12 @@ ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/greatarmstrong/.g
 		ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/3a528b1ba9b8b1c2e9d4ae41f4dd5304/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:31:17-49
 	android:name
 		ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/3a528b1ba9b8b1c2e9d4ae41f4dd5304/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:30:17-78
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/76712be219a39f39a64666add14d36da/transformed/exoplayer-core-2.18.5/AndroidManifest.xml:24:5-79
+MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/740a8364b4eb6324f87b88865722558c/transformed/exoplayer-common-2.18.5/AndroidManifest.xml:24:5-79
+MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/740a8364b4eb6324f87b88865722558c/transformed/exoplayer-common-2.18.5/AndroidManifest.xml:24:5-79
+	android:name
+		ADDED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/76712be219a39f39a64666add14d36da/transformed/exoplayer-core-2.18.5/AndroidManifest.xml:24:22-76
 permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.10.1] /Users/greatarmstrong/.gradle/caches/transforms-4/7980dee923f7b7c9157ec00342eb7aee/transformed/core-1.10.1/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
