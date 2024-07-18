@@ -1,0 +1,6 @@
+module armsaudio {
+  umbrella header "armsaudio-umbrella.h"
+
+  export *
+  module * { export * }
+}
