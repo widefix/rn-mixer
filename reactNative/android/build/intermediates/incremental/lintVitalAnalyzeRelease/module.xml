@@ -1,0 +1,26 @@
+<lint-module
+    format="1"
+    dir="/Users/greatarmstrong/rn-mixer/reactNative/android"
+    name=":armsaudio"
+    type="LIBRARY"
+    maven="ArmsaudioExample:armsaudio:"
+    agpVersion="8.2.1"
+    buildFolder="build"
+    bootClassPath="/Users/greatarmstrong/Library/Android/sdk/platforms/android-34/android.jar:/Users/greatarmstrong/Library/Android/sdk/build-tools/34.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="17"
+    compileTarget="android-34"
+    neverShrinking="true">
+  <lintOptions
+      disable="GradleCompatible"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="GradleCompatible"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>
