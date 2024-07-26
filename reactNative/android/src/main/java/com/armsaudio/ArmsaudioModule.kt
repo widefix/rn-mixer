@@ -332,7 +332,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     
         // Resume the mix
         if (isMixPaused) {
-            val startDelay: Long = 1000
+            val startDelay: Long = 10
             val startTime = SystemClock.uptimeMillis()
     
             val actualStartDelay = startTime + startDelay - SystemClock.uptimeMillis()
