@@ -35,7 +35,13 @@ export default function App() {
 
     const subscriptionTracks = armsaudioEmitter.addListener('DownloadComplete', (event) => {
       console.log(event);
-      setTracks(event);
+      if (event.fileNames) {
+        // iOS
+        setTracks(event.fileNames);
+      } else {
+        // Android
+        setTracks(event);
+      }
     });
 
     const subscriptionPlaybackUpdate = armsaudioEmitter.addListener('PlaybackProgress', (event) => {
