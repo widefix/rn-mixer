@@ -88,6 +88,11 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         return
     }
     let progress = player.currentTime / player.duration
+
+    guard let isNotPaused = !isMixPaused else {
+        return
+    }
+
     DispatchQueue.main.async {
         self.audioProgressValues = progress
         self.sendEvent(withName: "PlaybackProgress", body: ["progress": progress])
