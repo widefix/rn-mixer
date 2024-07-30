@@ -89,7 +89,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     }
     let progress = player.currentTime / player.duration
 
-    guard let isNotPaused = !isMixPaused else {
+    if isMixPaused {
         return
     }
 
