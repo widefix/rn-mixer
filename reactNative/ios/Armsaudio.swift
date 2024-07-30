@@ -162,7 +162,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         isMasterControlShowing = true
     }
 
-    @objc func pauseResumeMix() {
+   @objc func pauseResumeMix() {
         isMixPaused.toggle()
         
         if isMixPaused {
@@ -171,7 +171,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 pausedTime = player.currentTime
                 playerDeviceCurrTime = player.deviceCurrentTime
             }
-            print("All players paused successfully \(pausedTime) \(playerDeviceCurrTime)")
+            progressUpdateTimer?.invalidate()
         } else {
             let startDelay: TimeInterval = 1
             let startTime = players.values.first?.deviceCurrentTime ?? startDelay
@@ -179,6 +179,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 player.currentTime = pausedTime
                 player.play(atTime: startTime + startDelay)
             }
+            startProgressUpdateTimer()
         }
     }
 

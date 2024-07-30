@@ -16,7 +16,6 @@
     for React Native Apps.
     -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
         android:name="com.armsaudioexample.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"

@@ -11,9 +11,12 @@ The `Armsaudio` module is a React Native module that provides audio playback, mi
     - [Methods](#methods)
     - [Events](#events)
 3. [Usage](#usage)
+
+4. [Android OS](#android)
    
-4. [Contributing](#contributing)
-5. [License](#license)
+5. [Contributing](#contributing)
+
+6. [License](#license)
 
 ## Installation
 
@@ -262,6 +265,24 @@ export default function App() {
 
 
 ```
+
+
+
+### Android OS
+
+When working with the APIs on Android pls not there "might" be a few inconsistency on the following:
+
+```javascript
+// for iOS
+
+console.log(event.progress) // 0.5
+
+// for Android OS
+console.log(event.progress) // undefined
+console.log(event) // 0.5
+```
+
+> So from the above example, always log your API results and I would advise you follow the Dependency Inversion Principle (DIP) or program your UI to be dynamic enough at points where the API results are not the same for different platforms
 
 ### Contributing
 

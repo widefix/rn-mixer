@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.armsaudioexample.app-mergeDebugResources-28:/values-v22/values-v22.xml",
+            "outputFile": "com.armsaudioexample.app-mergeDebugResources-24:/values-v22/values-v22.xml",
             "map": [
                 {
                     "source": "/Users/greatarmstrong/.gradle/caches/transforms-4/346f569ba9d365042b456e7e69a1a638/transformed/appcompat-1.6.1/res/values-v22/values-v22.xml",

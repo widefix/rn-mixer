@@ -1,12 +1,12 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:1:1-27:12
-MERGED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
-MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
-MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:1:1-27:12
+MERGED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer-clean/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer-clean/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:2:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/bcd1aaab3390fd5a0905d07d3a934f98/transformed/jetified-appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/346f569ba9d365042b456e7e69a1a638/transformed/appcompat-1.6.1/AndroidManifest.xml:17:1-22:12
@@ -42,27 +42,13 @@ MERGED from [androidx.autofill:autofill:1.1.0] /Users/greatarmstrong/.gradle/cac
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/74559aa46fa84c51ba2981c79e3fe7ec/transformed/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/greatarmstrong/.gradle/caches/transforms-4/03a8fd772aa80a245e45a97aa9a1afde/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/greatarmstrong/.gradle/caches/transforms-4/983c02ff83afbe6f681238453b5c3ea4/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/05906f3113a58ce7ac8e5f48cef2d560/transformed/jetified-exoplayer-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b9e3e9969ba40111723432dc64a8737b/transformed/jetified-exoplayer-dash-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b3b5cafddd39112f1e5acbd1700e883/transformed/jetified-exoplayer-hls-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/55452235e4ef66e3939f46dd744bc51b/transformed/jetified-exoplayer-rtsp-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b1fc4383d86a60932e065e16ab4f912a/transformed/jetified-exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c9c34160c71ddd7935b7bd0905028359/transformed/jetified-exoplayer-core-2.18.5/AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/791608cc0d77656bfc32621bd4b161ed/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/af676a339047eebb1ea03fc498fa7d96/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c2040bddd655867fa184198d332ddef6/transformed/jetified-exoplayer-ui-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/29323dd7b8fe40ecc77c3f4a45aed40c/transformed/recyclerview-1.2.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/cab3548f43125a4681927891473618e3/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/e34fc78e1c2d7710425149a4ee5d43d2/transformed/media-1.6.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.core:core:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6621c239d1e00abea0752787fff99403/transformed/core-1.9.0/AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/f0eefe29ba2bd8f2b63e2d2a27468119/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] /Users/greatarmstrong/.gradle/caches/transforms-4/e4ad027880f75464e106461c0bda9074/transformed/lifecycle-runtime-2.5.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/2d73db32a8de7ed3ac65950e78ca1eb6/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/8b895edd3059ec9905ae614444879544/transformed/jetified-exoplayer-datasource-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/fd585548fc584bcb3b9124ed3898fc8a/transformed/jetified-exoplayer-database-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/958e348697e2a621758629bd89d67621/transformed/jetified-exoplayer-extractor-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/71f2ebda05b5872eda43d049fe3573ff/transformed/jetified-exoplayer-decoder-2.18.5/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ff5a9831e7f369198f9cf5d79dccbc25/transformed/jetified-exoplayer-common-2.18.5/AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/greatarmstrong/.gradle/caches/transforms-4/b32fa2a0961b239751fb58134f8e560c/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/04a30ef692f40abee3c8e84b59d24906/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.5.1] /Users/greatarmstrong/.gradle/caches/transforms-4/ec15f5005d39440d2e709e12ce7c069c/transformed/lifecycle-livedata-core-2.5.1/AndroidManifest.xml:17:1-24:12
@@ -71,32 +57,32 @@ MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/greatarms
 MERGED from [com.facebook.fbjni:fbjni:0.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/c7e26f7d3c2fc1a6636ff1467fc77795/transformed/jetified-fbjni-0.6.0/AndroidManifest.xml:2:1-7:12
 MERGED from [com.facebook.soloader:soloader:0.10.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c5277b14eec9cc4a12d0fb10c9f8e27e/transformed/jetified-soloader-0.10.5/AndroidManifest.xml:2:1-17:12
 	package
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 	android:versionName
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 	xmlns:tools
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:3:5-51
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:1:11-69
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:1:11-69
 uses-permission#android.permission.INTERNET
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:3:5-67
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:3:5-67
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:3:22-64
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:3:22-64
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:4:1-66
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:4:1-66
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:4:18-64
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:4:18-64
 uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:5:1-75
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:5:1-75
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:5:18-73
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:5:18-73
 application
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
-MERGED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
-MERGED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:5:5-8:50
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
+MERGED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
+MERGED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:7:5-26:19
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:5:5-8:50
 MERGED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:18:5-22:19
 MERGED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:18:5-22:19
 MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/greatarmstrong/.gradle/caches/transforms-4/1f0c06f94521237f79abc32a5f8de33d/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:23:5-33:19
@@ -112,65 +98,65 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/grea
 MERGED from [com.facebook.soloader:soloader:0.10.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c5277b14eec9cc4a12d0fb10c9f8e27e/transformed/jetified-soloader-0.10.5/AndroidManifest.xml:11:5-15:19
 MERGED from [com.facebook.soloader:soloader:0.10.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c5277b14eec9cc4a12d0fb10c9f8e27e/transformed/jetified-soloader-0.10.5/AndroidManifest.xml:11:5-15:19
 	android:extractNativeLibs
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6621c239d1e00abea0752787fff99403/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 	android:label
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:9:7-39
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:9:7-39
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:9:7-39
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:9:7-39
 	tools:ignore
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:8:9-48
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:8:9-48
 	android:roundIcon
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:11:7-52
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:11:7-52
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:11:7-52
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:11:7-52
 	tools:targetApi
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:7:9-29
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:7:9-29
 	android:icon
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:10:7-41
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:10:7-41
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:10:7-41
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:10:7-41
 	android:allowBackup
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:12:7-34
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:12:7-34
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:12:7-34
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:12:7-34
 	android:theme
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:13:7-38
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:13:7-38
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:13:7-38
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:13:7-38
 	android:usesCleartextTraffic
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml:6:9-44
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml:6:9-44
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:8:7-38
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:8:7-38
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:8:7-38
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:8:7-38
 activity#com.armsaudioexample.MainActivity
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:14:7-25:18
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:14:7-25:18
 	android:label
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:16:9-41
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:16:9-41
 	android:launchMode
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:18:9-40
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:18:9-40
 	android:windowSoftInputMode
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:19:9-51
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:19:9-51
 	android:exported
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:20:9-32
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:20:9-32
 	android:configChanges
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:17:9-118
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:17:9-118
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:15:9-37
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:15:9-37
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:21:9-24:25
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:21:9-24:25
 action#android.intent.action.MAIN
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:22:13-65
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:22:13-65
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:22:21-62
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:22:21-62
 category#android.intent.category.LAUNCHER
-ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:23:13-73
+ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:23:13-73
 	android:name
-		ADDED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/main/AndroidManifest.xml:23:23-70
+		ADDED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/main/AndroidManifest.xml:23:23-70
 uses-sdk
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
-INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
-MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
+INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
+MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer-clean/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:armsaudio] /Users/greatarmstrong/rn-mixer-clean/reactNative/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer-clean/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:react-native-community_slider] /Users/greatarmstrong/rn-mixer-clean/reactNative/example/node_modules/@react-native-community/slider/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:10:5-44
 MERGED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:10:5-44
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/greatarmstrong/.gradle/caches/transforms-4/bcd1aaab3390fd5a0905d07d3a934f98/transformed/jetified-appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
@@ -241,30 +227,12 @@ MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/great
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/greatarmstrong/.gradle/caches/transforms-4/03a8fd772aa80a245e45a97aa9a1afde/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/greatarmstrong/.gradle/caches/transforms-4/983c02ff83afbe6f681238453b5c3ea4/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/greatarmstrong/.gradle/caches/transforms-4/983c02ff83afbe6f681238453b5c3ea4/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/05906f3113a58ce7ac8e5f48cef2d560/transformed/jetified-exoplayer-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/05906f3113a58ce7ac8e5f48cef2d560/transformed/jetified-exoplayer-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b9e3e9969ba40111723432dc64a8737b/transformed/jetified-exoplayer-dash-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-dash:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b9e3e9969ba40111723432dc64a8737b/transformed/jetified-exoplayer-dash-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b3b5cafddd39112f1e5acbd1700e883/transformed/jetified-exoplayer-hls-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-hls:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/9b3b5cafddd39112f1e5acbd1700e883/transformed/jetified-exoplayer-hls-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/55452235e4ef66e3939f46dd744bc51b/transformed/jetified-exoplayer-rtsp-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-rtsp:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/55452235e4ef66e3939f46dd744bc51b/transformed/jetified-exoplayer-rtsp-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b1fc4383d86a60932e065e16ab4f912a/transformed/jetified-exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/b1fc4383d86a60932e065e16ab4f912a/transformed/jetified-exoplayer-smoothstreaming-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c9c34160c71ddd7935b7bd0905028359/transformed/jetified-exoplayer-core-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c9c34160c71ddd7935b7bd0905028359/transformed/jetified-exoplayer-core-2.18.5/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/791608cc0d77656bfc32621bd4b161ed/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/791608cc0d77656bfc32621bd4b161ed/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/af676a339047eebb1ea03fc498fa7d96/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/af676a339047eebb1ea03fc498fa7d96/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c2040bddd655867fa184198d332ddef6/transformed/jetified-exoplayer-ui-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-ui:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c2040bddd655867fa184198d332ddef6/transformed/jetified-exoplayer-ui-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/29323dd7b8fe40ecc77c3f4a45aed40c/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/greatarmstrong/.gradle/caches/transforms-4/29323dd7b8fe40ecc77c3f4a45aed40c/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/cab3548f43125a4681927891473618e3/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/cab3548f43125a4681927891473618e3/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/e34fc78e1c2d7710425149a4ee5d43d2/transformed/media-1.6.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.media:media:1.6.0] /Users/greatarmstrong/.gradle/caches/transforms-4/e34fc78e1c2d7710425149a4ee5d43d2/transformed/media-1.6.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6621c239d1e00abea0752787fff99403/transformed/core-1.9.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6621c239d1e00abea0752787fff99403/transformed/core-1.9.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/f0eefe29ba2bd8f2b63e2d2a27468119/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
@@ -273,16 +241,6 @@ MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] /Users/greatarmstrong/.
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.5.1] /Users/greatarmstrong/.gradle/caches/transforms-4/e4ad027880f75464e106461c0bda9074/transformed/lifecycle-runtime-2.5.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/2d73db32a8de7ed3ac65950e78ca1eb6/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/2d73db32a8de7ed3ac65950e78ca1eb6/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/8b895edd3059ec9905ae614444879544/transformed/jetified-exoplayer-datasource-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-datasource:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/8b895edd3059ec9905ae614444879544/transformed/jetified-exoplayer-datasource-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/fd585548fc584bcb3b9124ed3898fc8a/transformed/jetified-exoplayer-database-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-database:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/fd585548fc584bcb3b9124ed3898fc8a/transformed/jetified-exoplayer-database-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/958e348697e2a621758629bd89d67621/transformed/jetified-exoplayer-extractor-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-extractor:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/958e348697e2a621758629bd89d67621/transformed/jetified-exoplayer-extractor-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/71f2ebda05b5872eda43d049fe3573ff/transformed/jetified-exoplayer-decoder-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-decoder:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/71f2ebda05b5872eda43d049fe3573ff/transformed/jetified-exoplayer-decoder-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ff5a9831e7f369198f9cf5d79dccbc25/transformed/jetified-exoplayer-common-2.18.5/AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ff5a9831e7f369198f9cf5d79dccbc25/transformed/jetified-exoplayer-common-2.18.5/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/greatarmstrong/.gradle/caches/transforms-4/b32fa2a0961b239751fb58134f8e560c/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/greatarmstrong/.gradle/caches/transforms-4/b32fa2a0961b239751fb58134f8e560c/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/greatarmstrong/.gradle/caches/transforms-4/04a30ef692f40abee3c8e84b59d24906/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
@@ -298,9 +256,9 @@ MERGED from [com.facebook.fbjni:fbjni:0.6.0] /Users/greatarmstrong/.gradle/cache
 MERGED from [com.facebook.soloader:soloader:0.10.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c5277b14eec9cc4a12d0fb10c9f8e27e/transformed/jetified-soloader-0.10.5/AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.soloader:soloader:0.10.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c5277b14eec9cc4a12d0fb10c9f8e27e/transformed/jetified-soloader-0.10.5/AndroidManifest.xml:7:5-9:41
 	android:targetSdkVersion
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/greatarmstrong/rn-mixer/reactNative/example/android/app/src/debug/AndroidManifest.xml
+		INJECTED from /Users/greatarmstrong/rn-mixer-clean/reactNative/example/android/app/src/debug/AndroidManifest.xml
 uses-permission#android.permission.SYSTEM_ALERT_WINDOW
 ADDED from [com.facebook.react:react-android:0.74.2] /Users/greatarmstrong/.gradle/caches/transforms-4/716f968cc1e5225035406d1e56ec874f/transformed/jetified-react-android-0.74.2-debug/AndroidManifest.xml:16:5-78
 	android:name
@@ -337,12 +295,6 @@ ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] /Users/greatarmstrong/.g
 		ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] /Users/greatarmstrong/.gradle/caches/transforms-4/de53634973e45ba7b62012cb8e869aee/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
 	android:name
 		ADDED from [androidx.lifecycle:lifecycle-process:2.4.1] /Users/greatarmstrong/.gradle/caches/transforms-4/de53634973e45ba7b62012cb8e869aee/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
-uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c9c34160c71ddd7935b7bd0905028359/transformed/jetified-exoplayer-core-2.18.5/AndroidManifest.xml:24:5-79
-MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ff5a9831e7f369198f9cf5d79dccbc25/transformed/jetified-exoplayer-common-2.18.5/AndroidManifest.xml:24:5-79
-MERGED from [com.google.android.exoplayer:exoplayer-common:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/ff5a9831e7f369198f9cf5d79dccbc25/transformed/jetified-exoplayer-common-2.18.5/AndroidManifest.xml:24:5-79
-	android:name
-		ADDED from [com.google.android.exoplayer:exoplayer-core:2.18.5] /Users/greatarmstrong/.gradle/caches/transforms-4/c9c34160c71ddd7935b7bd0905028359/transformed/jetified-exoplayer-core-2.18.5/AndroidManifest.xml:24:22-76
 permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.9.0] /Users/greatarmstrong/.gradle/caches/transforms-4/6621c239d1e00abea0752787fff99403/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
