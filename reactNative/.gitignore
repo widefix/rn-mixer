@@ -76,6 +76,9 @@ web-build/
 
 # Ignore Gradle execution history
 reactNative/example/android/.gradle/
+reactNative/example/android/.gradle/**
 
 # Ignore APK files
 reactNative/example/android/app/build/outputs/apk/
+reactNative/example/android/app/build/outputs/apk/debug/
+reactNative/example/android/app/build/outputs/apk/debug/app-debug.apk
