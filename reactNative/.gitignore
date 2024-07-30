@@ -78,6 +78,7 @@ web-build/
 reactNative/example/android/.gradle/
 reactNative/example/android/.gradle/**
 
+
 # Ignore APK files
 reactNative/example/android/app/build/outputs/apk/
 reactNative/example/android/app/build/outputs/apk/debug/
