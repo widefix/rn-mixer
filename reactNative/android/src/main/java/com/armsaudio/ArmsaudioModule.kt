@@ -140,6 +140,13 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         sendEvent("AppErrorsX", errorEvent)
     }
 
+    private fun startPlayingAllTracks() {
+        audioTracks.forEach { track ->
+            track.player.start()
+            startAmplitudeUpdate(track.fileName)
+        }
+    }
+
     @ReactMethod
     private fun playAudio() {
         if (requestAudioFocus()) {
@@ -178,10 +185,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                         delay(actualStartDelay)
                     }
 
-                    audioTracks.forEach { track ->
-                        track.player.start()
-                        startAmplitudeUpdate(track.fileName)
-                    }
+                    startPlayingAllTracks()
 
                     maxPlaybackDuration = audioTracks.maxOfOrNull { it.player.duration } ?: 0
                     startProgressUpdateTimer()
@@ -214,7 +218,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                             audioTracks.add(AudioTrack(file.absolutePath, mediaPlayer))
                             downloadedFiles += 1
                             downloadProgress = downloadedFiles.toDouble() / totalFiles
-                            
+
                             val progressEvent = Arguments.createMap()
                             progressEvent.putDouble("progress", downloadProgress)
                             sendEvent("DownloadProgress", progressEvent)
@@ -260,16 +264,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             if (actualStartDelay > 0) {
                 scope.launch {
                     delay(actualStartDelay)
-                    audioTracks.forEach { track ->
-                        track.player.start()
-                        startAmplitudeUpdate(track.fileName) // Start amplitude update
-                    }
+                    startPlayingAllTracks()
                 }
             } else {
-                audioTracks.forEach { track ->
-                    track.player.start()
-                    startAmplitudeUpdate(track.fileName) // Start amplitude update
-                }
+                startPlayingAllTracks()
             }
 
             startProgressUpdateTimer()
@@ -310,14 +308,14 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         if (!isMixPaused) {
             pauseResumeMix()
         }
-    
+
         // Seek to the new position
         val newPosition = (progress * maxPlaybackDuration).toInt()
         audioTracks.forEach { track ->
             track.player.seekTo(newPosition)
         }
         pausedTime = newPosition
-    
+
         promise.resolve(true)
     }
 
@@ -329,12 +327,12 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             track.player.seekTo(newPosition)
         }
         pausedTime = newPosition
-    
+
         // Resume the mix
         if (isMixPaused) {
             val startDelay: Long = 10
             val startTime = SystemClock.uptimeMillis()
-    
+
             val actualStartDelay = startTime + startDelay - SystemClock.uptimeMillis()
             if (actualStartDelay > 0) {
                 scope.launch {
@@ -345,7 +343,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                 pauseResumeMix() // Resume the mix immediately
             }
         }
-    
+
         promise.resolve(true)
     }
 
@@ -364,18 +362,18 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         val amplitude = (0..100).random().toFloat() / 100
         return amplitude * volume
     }
-    
+
     private fun updateAmplitude(fileName: String) {
         if (isMixPaused) return
-    
+
         val track = audioTracks.find { it.fileName == fileName }
         track?.let {
             val amplitude = getAmplitudeFromPlayer(it.player, it.volume)
             val adjustedPower = amplitude
-    
+
             it.amplitudes.removeAt(0)
             it.amplitudes.add(adjustedPower)
-    
+
             sendTrackAmplitudeUpdate(it.fileName, it.amplitudes)
         }
     }
@@ -393,6 +391,9 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         progressUpdateTimer?.cancel() // Ensure no duplicate timers
         progressUpdateTimer = scope.launch {
             while (isActive && !isMixPaused) {
+                val positions = audioTracks.map { it.player.currentPosition }
+                sendEvent("PlaybacksProgress", positions)
+
                 val currentPosition = audioTracks.firstOrNull()?.player?.currentPosition ?: 0
                 val progress = currentPosition.toFloat() / maxPlaybackDuration
                 val progressEvent = Arguments.createMap()
