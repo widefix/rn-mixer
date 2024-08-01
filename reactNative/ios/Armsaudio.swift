@@ -425,7 +425,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             } else {
                 self.isMixBtnClicked = true
                 self.sendProgressUpdate(1.0)
-                self.sendEvent(withName: "DownloadComplete", body: ["fileNames": downloadedFileNames])
+                self.sendEvent(withName: "DownloadComplete", body: downloadedFileNames)
             }
         }
 }
