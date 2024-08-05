@@ -34,6 +34,9 @@ yarn android
 
 ### For iOS
 
+!!! fix the nodejs path in `ios/.xcode.env.local` file !!!
+
+
 ```bash
 # using npm
 npm run ios
