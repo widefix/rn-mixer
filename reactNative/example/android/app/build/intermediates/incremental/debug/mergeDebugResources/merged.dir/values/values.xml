@@ -244,6 +244,7 @@
     <item name="action_bar_spinner" type="id"/>
     <item name="action_menu_divider" type="id"/>
     <item name="action_menu_presenter" type="id"/>
+    <item name="filter" type="id"/>
     <item name="fragment_container_view_tag" type="id"/>
     <item name="home" type="id"/>
     <item name="invalidate_transform" type="id"/>
@@ -276,6 +277,7 @@
     <item name="transform" type="id"/>
     <item name="transform_origin" type="id"/>
     <item name="up" type="id"/>
+    <item name="use_hardware_layer" type="id"/>
     <item name="view_tag_instance_handle" type="id"/>
     <item name="view_tag_native_id" type="id"/>
     <id name="view_tree_lifecycle_owner"/>
