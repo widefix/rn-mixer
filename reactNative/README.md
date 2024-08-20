@@ -287,3 +287,4 @@ console.log(event) // 0.5
 ### Contributing
 
 - [Ndukwe Armstrong](https://www.linkedin.com/in/ndukwearmstrong/)
+- [Max Height](https://www.linkedin.com/in/george-chernyshov-1b3686242/)
