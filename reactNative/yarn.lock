@@ -4151,7 +4151,7 @@ __metadata:
     "@react-native/typescript-config": 0.74.84
     babel-plugin-module-resolver: ^5.0.0
     react: ^18.3.1
-    react-native: ^0.75.2
+    react-native: ^0.75.1
   languageName: unknown
   linkType: soft
 
@@ -11445,7 +11445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:^0.75.2":
+"react-native@npm:^0.75.1":
   version: 0.75.2
   resolution: "react-native@npm:0.75.2"
   dependencies:
