@@ -1,6 +1,6 @@
-reactNative/example/android/.gradle/
+reactNative/example/android/.gradle
 reactNative/example/android/.gradle/**
-reactNative/example/android/app/build/outputs/apk/
-reactNative/example/android/app/build/outputs/apk/debug/
-reactNative/example/android/app/build/outputs/apk/debug/app-debug.apk
+reactNative/example/android/app/build
+reactNative/example/android/build
+reactNative/android/build
 reactNative/example/ios/ArmsaudioExample.xcworkspace/xcuserdata/andrei.xcuserdatad/

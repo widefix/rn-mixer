@@ -7,9 +7,13 @@
         <compositeConfiguration>
           <compositeBuild compositeDefinitionSource="SCRIPT">
             <builds>
-              <build path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin" name="react-native-gradle-plugin">
+              <build path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin" name="gradle-plugins-root">
                 <projects>
                   <project path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin" />
+                  <project path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/react-native-gradle-plugin" />
+                  <project path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/settings-plugin" />
+                  <project path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/shared" />
+                  <project path="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/shared-testutil" />
                 </projects>
               </build>
             </builds>
@@ -22,8 +26,12 @@
             <option value="$PROJECT_DIR$/../../android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/../node_modules/@react-native-community/slider/android" />
             <option value="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin" />
+            <option value="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/react-native-gradle-plugin" />
+            <option value="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/settings-plugin" />
+            <option value="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/shared" />
+            <option value="$PROJECT_DIR$/../node_modules/@react-native/gradle-plugin/shared-testutil" />
+            <option value="$PROJECT_DIR$/../../node_modules/@react-native-community/slider/android" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
