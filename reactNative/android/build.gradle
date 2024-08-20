@@ -60,10 +60,18 @@ android {
 
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
+  ndkVersion = getExtOrIntegerDefault("ndkVersion")
+
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
 
+    externalNativeBuild {
+      cmake {
+        cppFlags("-std=c++17")
+        arguments("-DANDROID_STL=c++_shared")
+      }
+    }
   }
 
   buildTypes {
@@ -80,6 +88,23 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  buildFeatures {
+    prefab = true
+  }
+
+  externalNativeBuild {
+    cmake {
+      version = "3.18.1"
+      path = new File("src/main/cpp/CMakeLists.txt")
+    }
+  }
+
+  packaging {
+    resources {
+      excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    }
+  }
 }
 
 repositories {
@@ -95,5 +120,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "com.google.oboe:oboe:1.9.0"
+  implementation "com.arthenica:ffmpeg-kit-full:4.5.1-1"
 }
 

@@ -5,6 +5,9 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.SystemClock
+import android.util.Log
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.ReturnCode
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -14,6 +17,7 @@ import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.common.ReactConstants.TAG
 import kotlinx.coroutines.*
 import java.io.File
 import java.net.URL
@@ -21,7 +25,7 @@ import java.util.concurrent.CountDownLatch
 
 data class AudioTrack(
     val fileName: String,
-    val player: MediaPlayer,
+    val internalTrackNumber: Int,
     var volume: Float = 1.0f,
     var pan: Float = 0.0f,
     var amplitudes: MutableList<Float> = MutableList(10) { 0.0f } // Initialize with 10 zeroes
@@ -34,12 +38,27 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         const val NAME = "Armsaudio"
     }
 
+    init {
+        System.loadLibrary("sound")
+    }
+
+    external fun testFunction(): Long
+    external fun preparePlayer()
+    external fun resetPlayer()
+    external fun loadTrack(fileName: String): Int
+    external fun playAudioInternal()
+    external fun pauseAudio()
+    external fun resumeAudio()
+    external fun getCurrentPosition(): Float
+    external fun setPosition(position: Float)
+    external fun setTrackVolume(trackNum: Int, volume: Float)
+    external fun setTrackPan(trackNum: Int, pan: Float)
+
     override fun getName(): String {
         return NAME
     }
 
     private var isMixPaused = false
-    private var pausedTime = 0
     private var playerDeviceCurrTime = 0L
     private var audioTracks = mutableListOf<AudioTrack>()
     private var downloadProgress = 0.0
@@ -50,6 +69,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     private val scope = CoroutineScope(Dispatchers.IO)
     private var amplitudeTimers = mutableMapOf<String, Job>()
     private var progressUpdateTimer: Job? = null
+    private var playerPrepared = false
 
     private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
         when (focusChange) {
@@ -73,15 +93,15 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     }
 
     private fun handleAudioFocusLoss() {
-        audioTracks.forEach { it.player.pause() }
+        pauseAudio()
     }
 
     private fun handleAudioFocusLossTransient() {
-        audioTracks.forEach { it.player.pause() }
+        pauseAudio()
     }
 
     private fun handleAudioFocusGain() {
-        audioTracks.forEach { it.player.start() }
+        resumeAudio()
     }
 
     private fun sendEvent(eventName: String, params: Any?) {
@@ -140,53 +160,20 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         sendEvent("AppErrorsX", errorEvent)
     }
 
+    private fun prepareAudioPlayer() {
+        preparePlayer()
+    }
+
     @ReactMethod
     private fun playAudio() {
         if (requestAudioFocus()) {
-            val latch = CountDownLatch(audioTracks.size)
-            val scope = CoroutineScope(Dispatchers.IO)
-            scope.launch {
-                audioTracks.forEach { track ->
-                    launch {
-                        try {
-                            withContext(Dispatchers.Main) {
-                                track.player.reset()
-                                track.player.setDataSource(track.fileName)
-                                track.player.prepareAsync()
-                                track.player.setOnPreparedListener {
-                                    latch.countDown()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            sendGenAppErrors("Error preparing player for ${track.fileName}: ${e.localizedMessage}")
-                        }
-                    }
-                }
+            playAudioInternal()
 
-                latch.await()
-
-                withContext(Dispatchers.Main) {
-                    val startTime = SystemClock.uptimeMillis() + 1000
-
-                    audioTracks.forEach { track ->
-                        track.player.seekTo(0)
-                    }
-
-                    val actualStartDelay = startTime - SystemClock.uptimeMillis()
-                    if (actualStartDelay > 0) {
-                        delay(actualStartDelay)
-                    }
-
-                    audioTracks.forEach { track ->
-                        track.player.start()
-                        startAmplitudeUpdate(track.fileName)
-                    }
-
-                    maxPlaybackDuration = audioTracks.maxOfOrNull { it.player.duration } ?: 0
-                    startProgressUpdateTimer()
-                }
+            audioTracks.forEach { track ->
+                startAmplitudeUpdate(track.fileName)
             }
+
+            startProgressUpdateTimer()
         } else {
             sendGenAppErrors("Failed to gain audio focus")
         }
@@ -196,6 +183,11 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun downloadAudioFiles(urlStrings: ReadableArray) {
         resetApp()
         sendEvent("DownloadStart", "DownloadStart")
+        if (!playerPrepared) {
+            preparePlayer()
+            playerPrepared = true
+        }
+
         val urls = urlStrings.toArrayList().map { it.toString() }.map { URL(it) }
 
         val totalFiles = urls.size
@@ -205,27 +197,35 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         scope.launch {
             val deferreds = urls.map { url ->
                 async {
-                    downloadFile(url)?.let { file ->
-                        withContext(Dispatchers.Main) {
-                            val mediaPlayer = MediaPlayer().apply {
-                                setDataSource(reactApplicationContext, Uri.fromFile(file))
-                                prepare()
-                            }
-                            audioTracks.add(AudioTrack(file.absolutePath, mediaPlayer))
-                            downloadedFiles += 1
-                            downloadProgress = downloadedFiles.toDouble() / totalFiles
-                            
-                            val progressEvent = Arguments.createMap()
-                            progressEvent.putDouble("progress", downloadProgress)
-                            sendEvent("DownloadProgress", progressEvent)
-                        }
-                    } ?: run {
+                    val file = downloadFile(url)
+                    if (file == null) {
                         hasErrorOccurred = true
                         sendGenAppErrors("Failed to download file: ${url.path}")
                     }
+
+                    file
                 }
             }
-            deferreds.awaitAll()
+
+            val files = deferreds.awaitAll()
+            files.filterNotNull().forEach { file ->
+                val i = file.name.lastIndexOf('.')
+                val substr = file.name.substring(0, i)
+                val outputFile = File(file.parent, "$substr.wav")
+                if (outputFile.exists() && outputFile.totalSpace > 0)
+                    addTrack(outputFile)
+                else convertFile(file, outputFile) { addTrack(it) }
+
+                withContext(Dispatchers.Main) {
+                    downloadedFiles += 1
+                    downloadProgress = downloadedFiles.toDouble() / totalFiles
+
+                    val progressEvent = Arguments.createMap()
+                    progressEvent.putDouble("progress", downloadProgress)
+                    sendEvent("DownloadProgress", progressEvent)
+                }
+            }
+
             withContext(Dispatchers.Main) {
                 if (!hasErrorOccurred) {
                     sendArrayEvent("DownloadComplete", audioTracks.map { it.fileName })
@@ -241,35 +241,18 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         isMixPaused = !isMixPaused
 
         if (isMixPaused) {
+            pauseAudio()
             audioTracks.forEach { track ->
-                track.player.pause()
-                pausedTime = track.player.currentPosition
                 playerDeviceCurrTime = SystemClock.uptimeMillis()
                 amplitudeTimers[track.fileName]?.cancel() // Stop amplitude update
             }
+
             progressUpdateTimer?.cancel() // Stop progress update
         } else {
-            val startDelay: Long = 1000
-            val startTime = SystemClock.uptimeMillis()
+            resumeAudio()
 
             audioTracks.forEach { track ->
-                track.player.seekTo(pausedTime)
-            }
-
-            val actualStartDelay = startTime + startDelay - SystemClock.uptimeMillis()
-            if (actualStartDelay > 0) {
-                scope.launch {
-                    delay(actualStartDelay)
-                    audioTracks.forEach { track ->
-                        track.player.start()
-                        startAmplitudeUpdate(track.fileName) // Start amplitude update
-                    }
-                }
-            } else {
-                audioTracks.forEach { track ->
-                    track.player.start()
-                    startAmplitudeUpdate(track.fileName) // Start amplitude update
-                }
+                startAmplitudeUpdate(track.fileName) // Start amplitude update
             }
 
             startProgressUpdateTimer()
@@ -280,8 +263,8 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun setVolume(volume: Float, forFileName: String, promise: Promise) {
         val track = audioTracks.find { it.fileName == forFileName }
         if (track != null) {
-            track.player.setVolume(volume, volume)
             track.volume = volume
+            setTrackVolume(track.internalTrackNumber, volume)
             promise.resolve(true)
         } else {
             promise.reject("SET_VOLUME_ERROR", "Player does not exist for $forFileName")
@@ -293,10 +276,8 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun setPan(pan: Float, forFileName: String, promise: Promise) {
         val track = audioTracks.find { it.fileName == forFileName }
         if (track != null) {
-            val leftVolume = if (pan < 0) 1f else 1 - pan
-            val rightVolume = if (pan > 0) 1f else 1 + pan
-            track.player.setVolume(leftVolume, rightVolume)
             track.pan = pan
+            setTrackPan(track.internalTrackNumber, pan)
             promise.resolve(true)
         } else {
             promise.reject("SET_PAN_ERROR", "Player does not exist for $forFileName")
@@ -312,11 +293,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         }
     
         // Seek to the new position
-        val newPosition = (progress * maxPlaybackDuration).toInt()
-        audioTracks.forEach { track ->
-            track.player.seekTo(newPosition)
-        }
-        pausedTime = newPosition
+        setPosition(progress.toFloat())
     
         promise.resolve(true)
     }
@@ -324,28 +301,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun audioSliderChanged(progress: Double, promise: Promise) {
         // Set the new position
-        val newPosition = (progress * maxPlaybackDuration).toInt()
-        audioTracks.forEach { track ->
-            track.player.seekTo(newPosition)
-        }
-        pausedTime = newPosition
+        setPosition(progress.toFloat())
     
         // Resume the mix
-        if (isMixPaused) {
-            val startDelay: Long = 10
-            val startTime = SystemClock.uptimeMillis()
-    
-            val actualStartDelay = startTime + startDelay - SystemClock.uptimeMillis()
-            if (actualStartDelay > 0) {
-                scope.launch {
-                    delay(actualStartDelay)
-                    pauseResumeMix() // Resume the mix
-                }
-            } else {
-                pauseResumeMix() // Resume the mix immediately
-            }
-        }
-    
+        pauseResumeMix()
         promise.resolve(true)
     }
 
@@ -359,7 +318,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    private fun getAmplitudeFromPlayer(player: MediaPlayer, volume: Float): Float {
+    private fun getAmplitudeFromPlayer(volume: Float): Float {
         // Generate a random amplitude value and scale it by the track's volume
         val amplitude = (0..100).random().toFloat() / 100
         return amplitude * volume
@@ -370,7 +329,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     
         val track = audioTracks.find { it.fileName == fileName }
         track?.let {
-            val amplitude = getAmplitudeFromPlayer(it.player, it.volume)
+            val amplitude = getAmplitudeFromPlayer(it.volume)
             val adjustedPower = amplitude
     
             it.amplitudes.removeAt(0)
@@ -393,8 +352,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         progressUpdateTimer?.cancel() // Ensure no duplicate timers
         progressUpdateTimer = scope.launch {
             while (isActive && !isMixPaused) {
-                val currentPosition = audioTracks.firstOrNull()?.player?.currentPosition ?: 0
-                val progress = currentPosition.toFloat() / maxPlaybackDuration
+                val progress = getCurrentPosition()
                 val progressEvent = Arguments.createMap()
                 progressEvent.putDouble("progress", progress.toDouble())
                 sendEvent("PlaybackProgress", progressEvent)
@@ -404,36 +362,32 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-private fun resetApp() {
-    // Stop and release all media players
-    audioTracks.forEach { track ->
-        track.player.stop()
-        track.player.release()
+    private fun resetApp() {
+        // Stop and release all media players
+        resetPlayer()
+        deleteCache(reactApplicationContext)
+        audioTracks.clear()
+
+        // Reset internal state variables
+        downloadProgress = 0.0
+        isMixPaused = false
+        playerDeviceCurrTime = 0L
+        maxPlaybackDuration = 0
+
+        // Cancel and clear amplitude update timers
+        amplitudeTimers.values.forEach { it.cancel() }
+        amplitudeTimers.clear()
+
+        // Cancel progress update timer
+        progressUpdateTimer?.cancel()
+        progressUpdateTimer = null
+
+        // Abandon audio focus
+        abandonAudioFocus()
+
+        // Notify React Native about the reset
+        sendEvent("AppReset", "AppReset")
     }
-    audioTracks.clear()
-
-    // Reset internal state variables
-    downloadProgress = 0.0
-    isMixPaused = false
-    pausedTime = 0
-    playerDeviceCurrTime = 0L
-    maxPlaybackDuration = 0
-
-    // Cancel and clear amplitude update timers
-    amplitudeTimers.values.forEach { it.cancel() }
-    amplitudeTimers.clear()
-
-    // Cancel progress update timer
-    progressUpdateTimer?.cancel()
-    progressUpdateTimer = null
-
-    // Abandon audio focus
-    abandonAudioFocus()
-
-    // Notify React Native about the reset
-    sendEvent("AppReset", "AppReset")
-}
-
 
     private fun downloadFile(url: URL): File? {
         return try {
@@ -449,6 +403,60 @@ private fun resetApp() {
             e.printStackTrace()
             sendGenAppErrors("Error downloading file: ${e.localizedMessage}")
             null
+        }
+    }
+
+    private fun addTrack(track: File) {
+        val trackNum = loadTrack(track.absolutePath)
+        audioTracks.add(AudioTrack(track.absolutePath, trackNum))
+    }
+
+    private fun deleteCache(context: Context) {
+        try {
+            val dir = context.cacheDir
+            deleteDir(dir)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun deleteDir(dir: File?): Boolean {
+        if (dir != null && dir.isDirectory) {
+            val children = dir.list()
+            for (i in children.indices) {
+                val success = deleteDir(File(dir, children[i]))
+                if (!success) {
+                    return false
+                }
+            }
+            return dir.delete()
+        } else if (dir != null && dir.isFile) {
+            return dir.delete()
+        } else {
+            return false
+        }
+    }
+
+    private fun convertFile(
+        inputFile: File,
+        outputFile: File,
+        outputFileHandler: (File) -> Unit
+    ) {
+        val session = FFmpegKit.execute("-i $inputFile $outputFile")
+        if (ReturnCode.isSuccess(session.returnCode)) {
+            outputFileHandler.invoke(outputFile)
+        } else if (ReturnCode.isCancel(session.returnCode)) {
+            // CANCEL
+        } else {
+            Log.d(
+                TAG,
+                String.format(
+                    "Command failed with state %s and rc %s.%s",
+                    session.state,
+                    session.returnCode,
+                    session.failStackTrace
+                )
+            )
         }
     }
 }
