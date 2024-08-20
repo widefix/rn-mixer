@@ -168,11 +168,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     private fun playAudio() {
         if (requestAudioFocus()) {
             playAudioInternal()
-
-            audioTracks.forEach { track ->
-                startAmplitudeUpdate(track.fileName)
-            }
-
+            audioTracks.forEach { startAmplitudeUpdate(it.fileName) }
             startProgressUpdateTimer()
         } else {
             sendGenAppErrors("Failed to gain audio focus")
@@ -227,11 +223,9 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             }
 
             withContext(Dispatchers.Main) {
-                if (!hasErrorOccurred) {
+                if (!hasErrorOccurred)
                     sendArrayEvent("DownloadComplete", audioTracks.map { it.fileName })
-                } else {
-                    resetApp()
-                }
+                else resetApp()
             }
         }
     }
@@ -250,11 +244,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             progressUpdateTimer?.cancel() // Stop progress update
         } else {
             resumeAudio()
-
-            audioTracks.forEach { track ->
-                startAmplitudeUpdate(track.fileName) // Start amplitude update
-            }
-
+            audioTracks.forEach { startAmplitudeUpdate(it.fileName) }
             startProgressUpdateTimer()
         }
     }
@@ -288,9 +278,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun setAudioProgress(progress: Double, promise: Promise) {
         // Pause the mix
-        if (!isMixPaused) {
-            pauseResumeMix()
-        }
+        if (!isMixPaused) pauseResumeMix()
     
         // Seek to the new position
         setPosition(progress.toFloat())
