@@ -38,8 +38,8 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     }
 
     override func supportedEvents() -> [String]! {
-    return ["DownloadProgress", 
-            "DownloadComplete", 
+    return ["DownloadProgress",
+            "DownloadComplete",
             "AppReset",
             "PlaybackProgress",
             "DownloadErrors",
@@ -51,15 +51,15 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     func sendProgressUpdate(_ progress: Double) {
         self.sendEvent(withName: "DownloadProgress", body: ["progress": progress])
     }
-    
+
     func sendTrackAmplitueUpdate() {
         self.sendEvent(withName: "TracksAmplitudes", body: ["amplitudes": self.audioAmplitudes])
     }
-    
+
     func sendDownloadErrors(errors: String) {
         self.sendEvent(withName: "DownloadErrors", body: ["errMsg": errors])
     }
-    
+
     func sendGenAppErrors(errors: String) {
         self.sendEvent(withName: "AppErrorsX", body: ["errMsg": errors])
     }
@@ -67,7 +67,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     func sendDownloadStart() {
         self.sendEvent(withName: "DownloadStart", body: ["status": "DownloadStart"])
     }
-    
+
   @objc func startProgressUpdateTimer() {
     DispatchQueue.main.async {
         print("Starting progress update timer")
@@ -93,7 +93,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         self.sendEvent(withName: "PlaybackProgress", body: ["progress": progress])
     }
 }
-    
+
    @objc func pickAudioFile() {
     resetApp()
     DispatchQueue.main.async {
@@ -122,7 +122,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 print("File not accessible: \(fileName)")
                 continue
             }
-            
+
             audioFileURLs[fileName] = url
             getAudioProperties(for: url)
         }
@@ -137,7 +137,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
 
             for (fileName, player) in self.audioPlayers {
                 dispatchGroup.enter()
-                
+
                 player.numberOfLoops = 0
                 player.isMeteringEnabled = true
                 player.delegate = self
@@ -153,18 +153,18 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 self.players.forEach { (fileName, player) in
                     player.currentTime = 0.0
                     player.play(atTime: startTime + startDelay)
-                    
+
                     self.startAmplitudeUpdate(for: fileName)
                 }
             }
         }
-        
+
         isMasterControlShowing = true
     }
 
    @objc func pauseResumeMix() {
         isMixPaused.toggle()
-        
+
         if isMixPaused {
             for player in players.values {
                 player.pause()
@@ -172,6 +172,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 playerDeviceCurrTime = player.deviceCurrentTime
             }
             progressUpdateTimer?.invalidate()
+            amplitudeTimers.values.forEach { $0.invalidate() }
         } else {
             let startDelay: TimeInterval = 1
             let startTime = players.values.first?.deviceCurrentTime ?? startDelay
@@ -321,7 +322,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             print("Failed to set audio session category: \(error.localizedDescription)")
         }
     }
-    
+
     func getAudioProperties(for url: URL) {
     let asset = AVAsset(url: url)
     var properties: [String: Any] = [:]
@@ -364,19 +365,19 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     var downloadedFiles = 0
     var downloadedFileNames: [String] = []
     var hasErrorOccurred = false
-     
+
     let dispatchGroup = DispatchGroup()
-    
+
     for urlString in urlStrings {
         guard let url = URL(string: urlString) else {
             print("Invalid URL string: \(urlString)")
             sendDownloadErrors(errors: "Invalid URL string: \(urlString)")
             break
         }
-        
+
         dispatchGroup.enter()
         let fileName = url.lastPathComponent
-        
+
         let downloadTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else {
                 print("Failed to download file: \(error?.localizedDescription ?? "Unknown error")")
@@ -385,7 +386,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 dispatchGroup.leave()
                 return
             }
-            
+
             if hasErrorOccurred {
                 return
             }
@@ -404,21 +405,21 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             } catch {
                 hasErrorOccurred = true
                 self.sendDownloadErrors(errors: "Error creating audio player for \(fileName): \(error.localizedDescription)")
-                
+
                 dispatchGroup.leave()
             }
         }
-        
-        
+
+
         downloadTask.resume()
-        
+
         // Break the loop if any error has occurred
                if hasErrorOccurred {
                    break
                }
-        
+
     }
-    
+
      dispatchGroup.notify(queue: .main) {
             if hasErrorOccurred {
                 self.resetApp()
@@ -432,7 +433,3 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
 
 
 }
-
-
-
-
