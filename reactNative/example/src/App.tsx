@@ -63,7 +63,9 @@ export default function App() {
       console.log(event);
     });
 
-    xmod.newAddon().testLibrary();
+    if (xmod.newAddon().testLibrary) { // defined only for Android for now
+      xmod.newAddon().testLibrary();
+    }
     // Cleanup the subscription on unmount
     return () => {
       subscription.remove();
