@@ -3,8 +3,6 @@
 
 @interface RCT_EXTERN_MODULE(Armsaudio, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(pickAudioFile)
-
 RCT_EXTERN_METHOD(playAudio)
 
 RCT_EXTERN_METHOD(resetApp)

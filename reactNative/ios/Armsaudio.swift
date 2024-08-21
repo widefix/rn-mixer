@@ -6,7 +6,7 @@ import Combine
 import React
 
 @objc(Armsaudio)
-class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AVAudioPlayerDelegate  {
+class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
     @Published var audioPlayers: [String: AVAudioPlayer] = [:]
     @Published var audioFileURLs: [String: URL] = [:]
     @Published var audioProperties: [String] = []
@@ -23,10 +23,11 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     private var pausedTime: TimeInterval = 0.0
     private var playerDeviceCurrTime: TimeInterval = 0.0
     private var progressUpdateTimer: Timer?
+    private var amplitudesUpdateTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private var amplitudeTimers: [String: Timer] = [:]
     private var audioEngine = AVAudioEngine()
-    
+
     override init() {
         super.init()
         configureAudioSession()
@@ -36,7 +37,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
     override static func requiresMainQueueSetup() -> Bool {
         return true
     }
-    
+
     override func supportedEvents() -> [String]! {
         return ["DownloadProgress",
                 "DownloadComplete",
@@ -47,27 +48,27 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 "AppErrorsX",
                 "DownloadStart"]
     }
-    
+
     func sendProgressUpdate(_ progress: Double) {
         self.sendEvent(withName: "DownloadProgress", body: ["progress": progress])
     }
-    
+
     func sendTrackAmplitueUpdate() {
         self.sendEvent(withName: "TracksAmplitudes", body: ["amplitudes": self.audioAmplitudes])
     }
-    
+
     func sendDownloadErrors(errors: String) {
         self.sendEvent(withName: "DownloadErrors", body: ["errMsg": errors])
     }
-    
+
     func sendGenAppErrors(errors: String) {
         self.sendEvent(withName: "AppErrorsX", body: ["errMsg": errors])
     }
-    
+
     func sendDownloadStart() {
         self.sendEvent(withName: "DownloadStart", body: ["status": "DownloadStart"])
     }
-    
+
     @objc func startProgressUpdateTimer() {
         DispatchQueue.main.async {
             print("Starting progress update timer")
@@ -81,7 +82,40 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             print("Timer is valid: \(self.progressUpdateTimer?.isValid ?? false)")
         }
     }
-    
+
+    @objc func startAmplitudeUpdateTimer() {
+        DispatchQueue.main.async {
+            self.amplitudesUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+                guard let self = self else {
+                    print("Self is nil")
+                    return
+                }
+                self.updateAplitudes()
+            }
+        }
+    }
+
+    @objc func updateAplitudes() {
+        for (fileName, _) in audioPlayers {
+          guard let player = audioPlayers[fileName] else { return }
+          player.updateMeters()
+          let averagePower = player.averagePower(forChannel: 0)
+          let normalizedPower = max(0.0, (averagePower + 160) / 160)
+
+          let volume = Float(audiosVolumesSliderValues[fileName] ?? 0.5)
+          let adjustedPower = normalizedPower * volume
+
+          var amplitudes = audioAmplitudes[fileName] ?? Array(repeating: 0.0, count: 10)
+          amplitudes.removeFirst()
+          amplitudes.append(adjustedPower)
+          audioAmplitudes[fileName] = amplitudes
+        }
+
+        DispatchQueue.main.async {
+            self.sendTrackAmplitueUpdate()
+        }
+    }
+
     @objc func updateProgress() {
         guard let player = players.values.first else {
             sendGenAppErrors(errors: "No active player found")
@@ -93,51 +127,17 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             self.sendEvent(withName: "PlaybackProgress", body: ["progress": progress])
         }
     }
-    
-    @objc func pickAudioFile() {
-        resetApp()
-        DispatchQueue.main.async {
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-                return
-            }
-            
-            let documentPicker: UIDocumentPickerViewController
-            if #available(iOS 14.0, *) {
-                documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.audio], asCopy: true)
-            } else {
-                // Fallback on earlier versions
-                documentPicker = UIDocumentPickerViewController(documentTypes: ["public.audio"], in: .import)
-            }
-            
-            documentPicker.delegate = self
-            documentPicker.allowsMultipleSelection = true
-            windowScene.windows.first?.rootViewController?.present(documentPicker, animated: true, completion: nil)
-        }
-    }
-    
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        for url in urls {
-            let fileName = url.lastPathComponent
-            guard FileManager.default.isReadableFile(atPath: url.path) else {
-                print("File not accessible: \(fileName)")
-                continue
-            }
-            
-            audioFileURLs[fileName] = url
-            getAudioProperties(for: url)
-        }
-        isMixBtnClicked = true
-    }
-    
+
     @objc func playAudio() {
         startProgressUpdateTimer()
+        startAmplitudeUpdateTimer()
         isMixBtnClicked = false
         DispatchQueue.global(qos: .userInitiated).async {
             let dispatchGroup = DispatchGroup()
-            
+
             for (fileName, player) in self.audioPlayers {
                 dispatchGroup.enter()
-                
+
                 player.numberOfLoops = 0
                 player.isMeteringEnabled = true
                 player.delegate = self
@@ -145,26 +145,24 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 player.prepareToPlay()
                 dispatchGroup.leave()
             }
-            
+
             dispatchGroup.notify(queue: .main) {
                 let startDelay: TimeInterval = 1 // Delay to ensure all players are ready
                 let startTime = self.players.values.first?.deviceCurrentTime ?? startDelay
-                
+
                 self.players.forEach { (fileName, player) in
                     player.currentTime = 0.0
                     player.play(atTime: startTime + startDelay)
-                    
-                    self.startAmplitudeUpdate(for: fileName)
                 }
             }
         }
-        
+
         isMasterControlShowing = true
     }
-    
+
     @objc func pauseResumeMix() {
         isMixPaused.toggle()
-        
+
         if isMixPaused {
             for player in players.values {
                 player.pause()
@@ -172,18 +170,19 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 playerDeviceCurrTime = player.deviceCurrentTime
             }
             progressUpdateTimer?.invalidate()
-            amplitudeTimers.values.forEach { $0.invalidate() }
+            amplitudesUpdateTimer?.invalidate()
         } else {
             let startDelay: TimeInterval = 1
             let startTime = players.values.first?.deviceCurrentTime ?? startDelay
-            players.forEach { (_, player) in
+            players.forEach { (fileName, player) in
                 player.currentTime = pausedTime
                 player.play(atTime: startTime + startDelay)
             }
+            startAmplitudeUpdateTimer()
             startProgressUpdateTimer()
         }
     }
-    
+
     @objc func setVolume(_ volume: Float, forFileName fileName: String) {
         guard let player = audioPlayers[fileName] else {
             sendGenAppErrors(errors: "Player does not exist for \(fileName)")
@@ -193,7 +192,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             player.volume = volume
         }
     }
-    
+
     @objc func setPan(_ pan: Float, forFileName fileName: String) {
         guard let player = audioPlayers[fileName] else {
             sendGenAppErrors(errors: "Player does not exist for \(fileName)")
@@ -203,33 +202,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             player.pan = pan
         }
     }
-    
-    func startAmplitudeUpdate(for fileName: String) {
-        amplitudeTimers[fileName]?.invalidate()
-        amplitudeTimers[fileName] = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            self?.updateAmplitude(for: fileName)
-        }
-    }
-    
-    func updateAmplitude(for fileName: String) {
-        guard let player = audioPlayers[fileName] else { return }
-        player.updateMeters()
-        let averagePower = player.averagePower(forChannel: 0)
-        let normalizedPower = max(0.0, (averagePower + 160) / 160)
-        
-        let volume = Float(audiosVolumesSliderValues[fileName] ?? 0.5)
-        let adjustedPower = normalizedPower * volume
-        
-        var amplitudes = audioAmplitudes[fileName] ?? Array(repeating: 0.0, count: 10)
-        amplitudes.removeFirst()
-        amplitudes.append(adjustedPower)
-        
-        DispatchQueue.main.async {
-            self.audioAmplitudes[fileName] = amplitudes
-            self.sendTrackAmplitueUpdate()
-        }
-    }
-    
+
     @objc func setPlaybackPosition(to progress: Double) {
         let duration = players.values.first?.duration ?? 0.0
         let newTime = progress * duration
@@ -242,12 +215,12 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         startProgressUpdateTimer()
         isMixPaused.toggle()
     }
-    
+
     @objc func audioSliderChanged(_ point: Double) {
         //        print("Audio slider just changed to ---> ", point)
         setPlaybackPosition(to: Double(point))
     }
-    
+
     @objc func setAudioProgress(_ point: Double) {
         isMixPaused = true
         if isMixPaused {
@@ -260,19 +233,19 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             progressUpdateTimer?.invalidate()
         }
     }
-    
+
     @objc func resetApp() -> String {
         // Stop and reset all audio players
         audioPlayers.values.forEach { $0.stop() }
         audioPlayers.removeAll()
-        
+
         // Invalidate and reset amplitude timers
         amplitudeTimers.values.forEach { $0.invalidate() }
         amplitudeTimers.removeAll()
-        
+
         // Reset the audio engine
         audioEngine.reset()
-        
+
         // Clear all stored data
         players.removeAll()
         audioFileURLs.removeAll()
@@ -280,7 +253,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         audiosVolumesSliderValues.removeAll()
         audiosPanSliderValues.removeAll()
         audioAmplitudes.removeAll()
-        
+
         // Reset progress values and flags
         audioProgressValues = 0
         pausedTime = 0.0
@@ -288,31 +261,25 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         isMixBtnClicked = false
         isMixPaused = false
         isMasterControlShowing = false
-        
+
         // Invalidate the progress update timer
         progressUpdateTimer?.invalidate()
         progressUpdateTimer = nil
-        
+
         // Notify React Native about the reset (if needed)
         sendEvent(withName: "AppReset", body: ["status": "complete"])
-        
+
         return "App has been reset successfully"
     }
-    
-    // func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-    //     DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-    //         self.resetApp()
-    //     }
-    // }
-    
+
     @objc func appDidEnterBackground() {
         resetApp()
     }
-    
+
     @objc func appWillTerminate() {
         resetApp()
     }
-    
+
     private func configureAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
@@ -322,15 +289,15 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             print("Failed to set audio session category: \(error.localizedDescription)")
         }
     }
-    
+
     func getAudioProperties(for url: URL) {
         let asset = AVAsset(url: url)
         var properties: [String: Any] = [:]
-        
+
         Task {
             do {
                 var durationInSeconds: Float64 = 0
-                
+
                 if #available(iOS 15, *) {
                     let duration = try await asset.load(.duration)
                     durationInSeconds = CMTimeGetSeconds(duration)
@@ -338,7 +305,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                     // Fallback on earlier versions
                     durationInSeconds = CMTimeGetSeconds(asset.duration)
                 }
-                
+
                 DispatchQueue.main.async {
                     properties["duration"] = durationInSeconds
                     if let fileSize = try? FileManager.default.attributesOfItem(atPath: url.path)[FileAttributeKey.size] as? Int {
@@ -365,19 +332,19 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
         var downloadedFiles = 0
         var downloadedFileNames: [String] = []
         var hasErrorOccurred = false
-        
+
         let dispatchGroup = DispatchGroup()
-        
+
         for urlString in urlStrings {
             guard let url = URL(string: urlString) else {
                 print("Invalid URL string: \(urlString)")
                 sendDownloadErrors(errors: "Invalid URL string: \(urlString)")
                 break
             }
-            
+
             dispatchGroup.enter()
             let fileName = url.lastPathComponent
-            
+
             let downloadTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 guard let data = data, error == nil else {
                     print("Failed to download file: \(error?.localizedDescription ?? "Unknown error")")
@@ -386,7 +353,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                     dispatchGroup.leave()
                     return
                 }
-                
+
                 if hasErrorOccurred {
                     return
                 }
@@ -405,21 +372,21 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
                 } catch {
                     hasErrorOccurred = true
                     self.sendDownloadErrors(errors: "Error creating audio player for \(fileName): \(error.localizedDescription)")
-                    
+
                     dispatchGroup.leave()
                 }
             }
-            
-            
+
+
             downloadTask.resume()
-            
+
             // Break the loop if any error has occurred
             if hasErrorOccurred {
                 break
             }
-            
+
         }
-        
+
         dispatchGroup.notify(queue: .main) {
             if hasErrorOccurred {
                 self.resetApp()
@@ -430,6 +397,6 @@ class Armsaudio: RCTEventEmitter, ObservableObject, UIDocumentPickerDelegate, AV
             }
         }
     }
-    
-    
+
+
 }
