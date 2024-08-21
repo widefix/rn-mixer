@@ -99,12 +99,6 @@ android {
       path = new File("src/main/cpp/CMakeLists.txt")
     }
   }
-
-  packaging {
-    resources {
-      excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    }
-  }
 }
 
 repositories {
@@ -122,5 +116,5 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "com.google.oboe:oboe:1.9.0"
   implementation "com.arthenica:ffmpeg-kit-full:4.5.1-1"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 }
-
