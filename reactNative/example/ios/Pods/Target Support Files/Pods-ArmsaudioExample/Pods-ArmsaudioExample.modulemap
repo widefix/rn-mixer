@@ -1,6 +1,0 @@
-module Pods_ArmsaudioExample {
-  umbrella header "Pods-ArmsaudioExample-umbrella.h"
-
-  export *
-  module * { export * }
-}
