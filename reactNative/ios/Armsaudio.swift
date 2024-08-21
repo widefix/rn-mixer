@@ -14,7 +14,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
     @Published var audiosPanSliderValues: [String: Double] = [:]
     @Published var audioProgressValues: Double = 0
     @Published var audioValues: [String: Double] = [:]
-    @Published var audioAmplitudes: [String: [Float]] = [:]
+    @Published var audioAmplitudes: [String: Float] = [:]
     @Published var isMixBtnClicked: Bool = false
     @Published var isMixPaused: Bool = false
     @Published var isMasterControlShowing: Bool = false
@@ -105,10 +105,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
           let volume = Float(audiosVolumesSliderValues[fileName] ?? 0.5)
           let adjustedPower = normalizedPower * volume
 
-          var amplitudes = audioAmplitudes[fileName] ?? Array(repeating: 0.0, count: 10)
-          amplitudes.removeFirst()
-          amplitudes.append(adjustedPower)
-          audioAmplitudes[fileName] = amplitudes
+          audioAmplitudes[fileName] = adjustedPower
         }
 
         DispatchQueue.main.async {
@@ -317,7 +314,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
                     self.audiosVolumesSliderValues[fileName] = 0.5
                     self.audiosPanSliderValues[fileName] = 0.5
                     self.audioProgressValues = 0
-                    self.audioAmplitudes[fileName] = Array(repeating: 0.0, count: 10)
+                    self.audioAmplitudes[fileName] = 0.0
                 }
             } catch {
                 sendGenAppErrors(errors: "Error loading duration: \(error.localizedDescription)")

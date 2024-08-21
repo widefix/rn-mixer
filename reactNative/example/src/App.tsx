@@ -4,9 +4,24 @@ import * as xmod from "armsaudio";
 import TrackControl from './Slider';
 import PlayBackSlider from './PlaybackSlider';
 
+function Amplitudes({ amplitudes }: { amplitudes: { [key: string]: number } }) {
+  return (
+    <View>
+      <View style={{ flexDirection: "row", justifyContent: "center", height: 120 }}>
+        {Object.entries(amplitudes).map(([track, amplitude]) => (
+          <View key={track + 'wrap'} style={{ flexDirection: "column-reverse", backgroundColor: "green", height: 100 }}>
+            <View key={track} style={{ width: 20, height: amplitude * 100, backgroundColor: "red", margin: 1 }} />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const armsaudioEmitter = new NativeEventEmitter(xmod.newAddon());
   const [tracks, setTracks] = React.useState<string[]>([]);
+  const [amplitudes, setAmplitudes] = React.useState<{[key: string]: number}>({});
   const [progress, setProgress] = React.useState(0);
   const [playBackProgress, setplayBackProgress] = React.useState(0);
   const [errMessage, seterrMessage] = React.useState(":::error messages:::");
@@ -39,7 +54,6 @@ export default function App() {
     });
 
     const subscriptionPlaybackUpdate = armsaudioEmitter.addListener('PlaybackProgress', (event) => {
-      console.log(event);
       // setplayBackProgress(event);
       setplayBackProgress(event.progress);
     });
@@ -51,7 +65,7 @@ export default function App() {
 
     const subscriptionTracksAmplitude = armsaudioEmitter.addListener('TracksAmplitudes', (event) => {
      // console.log(event);
-      console.log(event.amplitudes);
+      setAmplitudes(event.amplitudes);
       // console.log(event.amplitudes);
     });
 
@@ -98,8 +112,6 @@ export default function App() {
         borderRadius: 20, padding: 10
       }}> {errMessage} </Text>
       <Text style={{ color: "grey" }}>Download Progress: {progress * 100}%</Text>
-      <Button title='Open file' onPress={() => xmod.newAddon().pickAudioFile()}></Button>
-
 
       <View style={{ height: 20, marginVertical: 3 }}></View>
       <Button title='Used Download files' onPress={() => xmod.newAddon().downloadAudioFiles(audioUrls)}></Button>
@@ -113,6 +125,7 @@ export default function App() {
         initialValue={playBackProgress}
         onSlidingStart={handleSlidingStart}
         onSlidingComplete={handleSlidingComplete} />
+      <Amplitudes amplitudes={amplitudes} />
       <TrackControl
         items={tracks}
         setVolumeX={(v, t) => xmod.newAddon().setVolume(v, t)}
