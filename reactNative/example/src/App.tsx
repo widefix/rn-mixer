@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Button, NativeEventEmitter } from 'react-native';
+import { StyleSheet, View, Text, Button, NativeEventEmitter, Platform } from 'react-native';
 import * as xmod from "armsaudio";
 import TrackControl from './Slider';
 import PlayBackSlider from './PlaybackSlider';
@@ -59,13 +59,14 @@ export default function App() {
       console.log(event); // for download just use event
     });
 
-    const subscriptionTestLibrary = armsaudioEmitter.addListener('Library link: true', (event) => {
-      console.log(event);
-    });
-
-    if (xmod.newAddon().testLibrary) { // defined only for Android for now
+    let subscriptionTestLibrary;
+    if (Platform.OS === 'android') {
+      subscriptionTestLibrary = armsaudioEmitter.addListener('Library link: true', (event) => {
+        console.log(event);
+      });
       xmod.newAddon().testLibrary();
-    }
+    };
+
     // Cleanup the subscription on unmount
     return () => {
       subscription.remove();
@@ -74,7 +75,9 @@ export default function App() {
       subscriptionDownloadErrorMessage.remove();
       subscriptionTracksAmplitude.remove();
       subscriptionDownloadStart.remove();
-      subscriptionTestLibrary.remove();
+      if (subscriptionTestLibrary) {
+        subscriptionTestLibrary.remove();
+      }
     };
   }, []);
 
