@@ -59,7 +59,11 @@ export default function App() {
       console.log(event); // for download just use event
     });
 
+    const subscriptionTestLibrary = armsaudioEmitter.addListener('Library link: true', (event) => {
+      console.log(event);
+    });
 
+    xmod.newAddon().testLibrary();
     // Cleanup the subscription on unmount
     return () => {
       subscription.remove();
@@ -68,6 +72,7 @@ export default function App() {
       subscriptionDownloadErrorMessage.remove();
       subscriptionTracksAmplitude.remove();
       subscriptionDownloadStart.remove();
+      subscriptionTestLibrary.remove();
     };
   }, []);
 

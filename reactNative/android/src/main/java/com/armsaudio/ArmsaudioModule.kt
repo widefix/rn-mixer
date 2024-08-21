@@ -165,6 +165,16 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    private fun testLibrary() {
+        val expected = 17L
+        val actual = testFunction()
+
+        val testResultEvent = Arguments.createMap()
+        testResultEvent.putBoolean("cpp link success", expected == actual)
+        sendEvent("Library link: true", testResultEvent)
+    }
+
+    @ReactMethod
     private fun playAudio() {
         if (requestAudioFocus()) {
             playAudioInternal()
