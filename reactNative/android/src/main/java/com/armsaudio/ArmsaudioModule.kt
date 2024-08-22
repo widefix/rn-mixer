@@ -331,10 +331,12 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
     private fun sendTrackAmplitudeUpdates() {
         val eventParams = Arguments.createMap()
+        val amplitudesMap = Arguments.createMap()
         audioTracks.forEach {
-            eventParams.putString(it.fileName, it.amplitudes.last().toString())
+            amplitudesMap.putString(it.fileName, it.amplitudes.last().toString())
         }
 
+        eventParams.putMap("amplitudes", amplitudesMap)
         sendEvent("TracksAmplitudes", eventParams)
     }
 
