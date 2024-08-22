@@ -1,0 +1,27 @@
+{
+  "name": "armsaudio",
+  "version": "0.1.0",
+  "description": "armsaudio module",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/widefix/rn-mixer.git"
+  },
+  "author": "armstrong99 <armstrong.ndukwe@gmail.com> (https://github.com/armstrong99)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/armstrong99/armsaudio/issues"
+  },
+  "homepage": "https://github.com/armstrong99/armsaudio#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "workspaces": [
+    "reactNative"
+  ],
+  "private": true
+}
