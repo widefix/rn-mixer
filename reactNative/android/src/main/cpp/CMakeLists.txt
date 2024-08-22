@@ -8,6 +8,7 @@ add_library (
         bridge.cpp
         OneShotSampleSource.cpp
         SampleBuffer.cpp
+        SampleSource.cpp
         SimpleMultiPlayer.cpp
         stream/FileInputStream.cpp
         wav/WavChunkHeader.cpp

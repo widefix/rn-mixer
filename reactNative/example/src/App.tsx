@@ -64,9 +64,8 @@ export default function App() {
     });
 
     const subscriptionTracksAmplitude = armsaudioEmitter.addListener('TracksAmplitudes', (event) => {
-     // console.log(event);
+      console.log(event);
       setAmplitudes(event.amplitudes);
-      // console.log(event.amplitudes);
     });
 
     const subscriptionDownloadStart = armsaudioEmitter.addListener('DownloadStart', (event) => {
