@@ -324,17 +324,17 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         audioTracks.forEachIndexed { index, track ->
             track.amplitudes.removeAt(0)
             track.amplitudes.add(amplitudes[index])
-    
-            sendTrackAmplitudeUpdate(track.fileName, track.amplitudes)
         }
+
+        sendTrackAmplitudeUpdates()
     }
 
-    private fun sendTrackAmplitudeUpdate(fileName: String, amplitudes: List<Float>) {
+    private fun sendTrackAmplitudeUpdates() {
         val eventParams = Arguments.createMap()
-        eventParams.putString("fileName", fileName)
-        val amplitudeArray = Arguments.createArray()
-        amplitudes.forEach { amplitudeArray.pushDouble(it.toDouble()) }
-        eventParams.putArray("amplitudes", amplitudeArray)
+        audioTracks.forEach {
+            eventParams.putString(it.fileName, it.amplitudes.last().toString())
+        }
+
         sendEvent("TracksAmplitudes", eventParams)
     }
 
