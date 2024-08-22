@@ -2,6 +2,8 @@
   "name": "armsaudio",
   "version": "0.1.0",
   "description": "armsaudio module",
+  "main": "reactNative/lib/commonjs/index",
+  "module": "reactNative/lib/module/index",
   "keywords": [
     "react-native",
     "ios",
@@ -20,8 +22,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "workspaces": [
-    "reactNative"
-  ],
   "private": true
 }
