@@ -50,6 +50,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     external fun pauseAudio()
     external fun resumeAudio()
     external fun getCurrentPosition(): Float
+    external fun getAmplitudes(): Array<Float>
     external fun setPosition(position: Float)
     external fun setTrackVolume(trackNum: Int, volume: Float)
     external fun setTrackPan(trackNum: Int, pan: Float)
@@ -67,7 +68,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         reactApplicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
     private val scope = CoroutineScope(Dispatchers.IO)
-    private var amplitudeTimers = mutableMapOf<String, Job>()
+    private var amplitudeTimer: Job? = null
     private var progressUpdateTimer: Job? = null
     private var playerPrepared = false
 
@@ -178,7 +179,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     private fun playAudio() {
         if (requestAudioFocus()) {
             playAudioInternal()
-            audioTracks.forEach { startAmplitudeUpdate(it.fileName) }
+            startAmplitudeUpdate()
             startProgressUpdateTimer()
         } else {
             sendGenAppErrors("Failed to gain audio focus")
@@ -248,13 +249,13 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             pauseAudio()
             audioTracks.forEach { track ->
                 playerDeviceCurrTime = SystemClock.uptimeMillis()
-                amplitudeTimers[track.fileName]?.cancel() // Stop amplitude update
+                amplitudeTimer?.cancel() // Stop amplitude update
             }
 
             progressUpdateTimer?.cancel() // Stop progress update
         } else {
             resumeAudio()
-            audioTracks.forEach { startAmplitudeUpdate(it.fileName) }
+            startAmplitudeUpdate()
             startProgressUpdateTimer()
         }
     }
@@ -306,34 +307,25 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         promise.resolve(true)
     }
 
-    private fun startAmplitudeUpdate(fileName: String) {
-        amplitudeTimers[fileName]?.cancel()
-        amplitudeTimers[fileName] = scope.launch {
+    private fun startAmplitudeUpdate() {
+        amplitudeTimer?.cancel()
+        amplitudeTimer = scope.launch {
             while (isActive) {
-                updateAmplitude(fileName)
+                updateAmplitudes()
                 delay(100) // Update every 100ms
             }
         }
     }
-
-    private fun getAmplitudeFromPlayer(volume: Float): Float {
-        // Generate a random amplitude value and scale it by the track's volume
-        val amplitude = (0..100).random().toFloat() / 100
-        return amplitude * volume
-    }
     
-    private fun updateAmplitude(fileName: String) {
+    private fun updateAmplitudes() {
         if (isMixPaused) return
+
+        val amplitudes = getAmplitudes()
+        audioTracks.forEachIndexed { index, track ->
+            track.amplitudes.removeAt(0)
+            track.amplitudes.add(amplitudes[index])
     
-        val track = audioTracks.find { it.fileName == fileName }
-        track?.let {
-            val amplitude = getAmplitudeFromPlayer(it.volume)
-            val adjustedPower = amplitude
-    
-            it.amplitudes.removeAt(0)
-            it.amplitudes.add(adjustedPower)
-    
-            sendTrackAmplitudeUpdate(it.fileName, it.amplitudes)
+            sendTrackAmplitudeUpdate(track.fileName, track.amplitudes)
         }
     }
 
@@ -373,8 +365,8 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         maxPlaybackDuration = 0
 
         // Cancel and clear amplitude update timers
-        amplitudeTimers.values.forEach { it.cancel() }
-        amplitudeTimers.clear()
+        amplitudeTimer?.cancel()
+        amplitudeTimer = null
 
         // Cancel progress update timer
         progressUpdateTimer?.cancel()

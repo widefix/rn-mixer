@@ -33,6 +33,7 @@ namespace iolib {
         virtual void mixAudio(float* outBuff, int numChannels, int32_t numFrames);
         float getPosition();
         void setPosition(float position);
+        float getAmplitude();
     };
 
 } // namespace iolib
