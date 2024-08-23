@@ -85,7 +85,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
 
     @objc func startAmplitudeUpdateTimer() {
         DispatchQueue.main.async {
-            self.amplitudesUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
+            self.amplitudesUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] _ in
                 guard let self = self else {
                     print("Self is nil")
                     return
