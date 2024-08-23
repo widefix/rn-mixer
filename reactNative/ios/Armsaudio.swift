@@ -85,7 +85,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
 
     @objc func startAmplitudeUpdateTimer() {
         DispatchQueue.main.async {
-            self.amplitudesUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            self.amplitudesUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
                 guard let self = self else {
                     print("Self is nil")
                     return
@@ -99,13 +99,12 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
         for (fileName, _) in audioPlayers {
           guard let player = audioPlayers[fileName] else { return }
           player.updateMeters()
-          let averagePower = player.averagePower(forChannel: 0)
-          let normalizedPower = max(0.0, (averagePower + 160) / 160)
+          let averagePowerDb = player.averagePower(forChannel: 0)
+          let normalizedPower = max(0.0, (averagePowerDb + 160) / 160)
+          // Scale the power to a value between 0 and 1, because if no signal the average is 0.25
+          let scaledPower = min(1, max(0.0, normalizedPower - 0.25) * 1.5)
 
-          let volume = Float(audiosVolumesSliderValues[fileName] ?? 0.5)
-          let adjustedPower = normalizedPower * volume
-
-          audioAmplitudes[fileName] = adjustedPower
+          audioAmplitudes[fileName] = scaledPower
         }
 
         DispatchQueue.main.async {
