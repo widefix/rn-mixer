@@ -22,13 +22,16 @@
 
 namespace iolib {
 
-    void OneShotSampleSource::mixAudio(float* outBuff, int numChannels, int32_t numFrames) {
-        int32_t numSamples = mSampleBuffer->getNumSamples();
-        int32_t sampleChannels = mSampleBuffer->getProperties().channelCount;
+    void OneShotSampleSource::mixAudio(float* outBuff, int numChannels, int32_t numFrames, parselib::WavStreamReader* reader) {
+        int32_t sampleChannels = reader->getNumChannels();
+        int32_t numSamples = reader->getNumSampleFrames() * sampleChannels;
         int32_t samplesLeft = numSamples - mCurSampleIndex;
         int32_t numWriteFrames = mIsPlaying
                                  ? std::min(numFrames, samplesLeft / sampleChannels)
                                  : 0;
+
+        float* buffer = new float[numWriteFrames * sampleChannels];
+        reader->getDataFloat(buffer, numWriteFrames);
 
         if (numWriteFrames != 0) {
             const float* data  = mSampleBuffer->getSampleData();
@@ -54,9 +57,10 @@ namespace iolib {
             } else if ((sampleChannels == 2) && (numChannels == 2)) {
                 // STEREO output from STEREO samples
                 int dstSampleIndex = 0;
+
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[mCurSampleIndex++] * mLeftGain;
-                    outBuff[dstSampleIndex++] += data[mCurSampleIndex++] * mRightGain;
+                    outBuff[dstSampleIndex++] += buffer[mCurSampleIndex++] * mLeftGain;
+                    outBuff[dstSampleIndex++] += buffer[mCurSampleIndex++] * mRightGain;
                 }
             }
 
@@ -64,6 +68,8 @@ namespace iolib {
                 mIsPlaying = false;
             }
         }
+
+        delete[] buffer;
 
         // silence
         // no need as the output buffer would need to have been filled with silence

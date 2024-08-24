@@ -49,6 +49,8 @@ namespace iolib {
          * are added.
          */
         void addSampleSource(SampleSource* source, SampleBuffer* buffer);
+
+        void addReader(const char* fileName);
         /**
          * Deallocates and deletes all added source/buffer (see addSampleSource()).
          */
@@ -70,6 +72,7 @@ namespace iolib {
 
         void setGain(int index, float gain);
         float getGain(int index);
+        void setPosition(float position);
 
     private:
         class MyDataCallback : public oboe::AudioStreamDataCallback {
@@ -114,6 +117,9 @@ namespace iolib {
 
         std::shared_ptr<MyDataCallback> mDataCallback;
         std::shared_ptr<MyErrorCallback> mErrorCallback;
+
+        std::vector<parselib::WavStreamReader> readers;
+        float position;
     };
 
 }

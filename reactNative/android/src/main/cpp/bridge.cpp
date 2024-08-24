@@ -34,6 +34,7 @@ Java_com_armsaudio_ArmsaudioModule_resetPlayer(JNIEnv *env, jobject thiz) {
     sPlayer.unloadSampleData();
     sources.clear();
     buffers.clear();
+    // TODO: close the file readers
 }
 
 extern "C"
@@ -51,6 +52,8 @@ Java_com_armsaudio_ArmsaudioModule_loadTrack(JNIEnv *env, jobject thiz, jstring 
     sPlayer.addSampleSource(source, buffer);
 
     close(f);
+
+    sPlayer.addReader(env->GetStringUTFChars(fileName, 0));
 
     return buffers.size() - 1;
 }
@@ -110,6 +113,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_setPosition(JNIEnv *env, jobject thiz, jfloat position) {
     sPlayer.pause();
+    sPlayer.setPosition(position);
     for (auto &source : sources) {
         source->setPosition(position);
     }
