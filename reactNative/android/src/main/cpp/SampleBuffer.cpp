@@ -30,6 +30,7 @@ namespace iolib {
         mAudioProperties.sampleRate = reader->getSampleRate();
 
         reader->positionToAudio();
+        reader->setDataPosition(17.0);
 
         mNumSamples = reader->getNumSampleFrames() * reader->getNumChannels();
         mSampleData = new float[mNumSamples];
