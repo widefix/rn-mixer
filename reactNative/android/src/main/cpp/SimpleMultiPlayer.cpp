@@ -38,7 +38,6 @@ namespace iolib {
     DataCallbackResult SimpleMultiPlayer::MyDataCallback::onAudioReady(AudioStream *oboeStream,
                                                                        void *audioData,
                                                                        int32_t numFrames) {
-
         StreamState streamState = oboeStream->getState();
         if (streamState != StreamState::Open && streamState != StreamState::Started) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState:%d", streamState);
