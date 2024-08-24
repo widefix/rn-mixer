@@ -18,6 +18,7 @@
 #define _PLAYER_AUDIOSOURCE_H_
 
 #include <cstdint>
+#include "wav/WavStreamReader.h"
 
 namespace iolib {
 
@@ -28,7 +29,7 @@ namespace iolib {
     public:
         virtual ~DataSource() {};
 
-        virtual void mixAudio(float* outBuff, int numChannels, int numFrames) = 0;
+        virtual void mixAudio(float* outBuff, int numChannels, int numFrames, parselib::WavStreamReader* reader) = 0;
     };
 
 }

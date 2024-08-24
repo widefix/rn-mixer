@@ -22,6 +22,11 @@
 // local includes
 #include "SimpleMultiPlayer.h"
 
+#include "fstream"
+#include "stream/FileInputStream.h"
+#include <fcntl.h>
+
+
 static const char* TAG = "SimpleMultiPlayer";
 
 using namespace oboe;
@@ -32,7 +37,7 @@ namespace iolib {
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
     SimpleMultiPlayer::SimpleMultiPlayer()
-            : mChannelCount(0), mOutputReset(false), mSampleRate(0), mNumSampleBuffers(0)
+            : mChannelCount(0), mOutputReset(false), mSampleRate(0), mNumSampleBuffers(0), position(0)
     {}
 
     DataCallbackResult SimpleMultiPlayer::MyDataCallback::onAudioReady(AudioStream *oboeStream,
@@ -52,8 +57,12 @@ namespace iolib {
         // OneShotSampleSource* sources = mSampleSources.get();
         for(int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
             if (mParent->mSampleSources[index]->isPlaying()) {
-                mParent->mSampleSources[index]->mixAudio((float*)audioData, mParent->mChannelCount,
-                                                         numFrames);
+                mParent->mSampleSources[index]->mixAudio(
+                    (float*)audioData,
+                    mParent->mChannelCount,
+                    numFrames,
+                    &mParent->readers[index]
+                );
             }
         }
 
@@ -66,6 +75,14 @@ namespace iolib {
         mParent->resetAll();
         if (mParent->openStream() && mParent->startStream()) {
             mParent->mOutputReset = true;
+        }
+    }
+
+    void SimpleMultiPlayer::setPosition(float position) {
+        this->position = position;
+
+        for (auto &reader : readers) {
+            reader.setDataPosition(position);
         }
     }
 
@@ -190,6 +207,15 @@ void SimpleMultiPlayer::triggerUp(int32_t index) {
     if (index < mNumSampleBuffers) {
         mSampleSources[index]->setStopMode();
     }
+}
+
+void SimpleMultiPlayer::addReader(const char* fileName) {
+    auto f = open(fileName, O_RDONLY);
+    auto stream = parselib::FileInputStream(f);
+    auto reader = parselib::WavStreamReader(&stream);
+    reader.parse();
+    reader.positionToAudio();
+    readers.push_back(reader);
 }
 
 void SimpleMultiPlayer::pause() {

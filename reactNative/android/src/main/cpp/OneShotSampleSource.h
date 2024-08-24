@@ -18,6 +18,7 @@
 #define _PLAYER_ONESHOTSAMPLESOURCE_
 
 #include "SampleSource.h"
+#include "wav/WavStreamReader.h"
 
 namespace iolib {
 
@@ -30,7 +31,7 @@ namespace iolib {
         OneShotSampleSource(SampleBuffer *sampleBuffer, float pan) : SampleSource(sampleBuffer, pan) {};
         virtual ~OneShotSampleSource() {};
 
-        virtual void mixAudio(float* outBuff, int numChannels, int32_t numFrames);
+        virtual void mixAudio(float* outBuff, int numChannels, int32_t numFrames, parselib::WavStreamReader* reader);
         float getPosition();
         void setPosition(float position);
         float getAmplitude();
