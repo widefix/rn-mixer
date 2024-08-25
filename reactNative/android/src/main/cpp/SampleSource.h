@@ -45,9 +45,9 @@ namespace iolib {
 
         bool isPlaying() { return mIsPlaying; }
 
-        void setSteamPosition(int position) {
-            mStreamPosition = position;
-            mStream.setPos(position);
+        void setSteamPosition(int tPosition) {
+            mStreamPosition = tPosition;
+            mReader.setDataPosition(tPosition);
         }
 
         void setPan(float pan) {
