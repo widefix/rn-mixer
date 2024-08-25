@@ -35,6 +35,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_armsaudio_ArmsaudioModule_loadTrack(JNIEnv *env, jobject thiz, jstring fileName) {
     auto source = new iolib::SampleSource(env->GetStringUTFChars(fileName, 0), 1);
+    sPlayer.addSampleSource(source);
     sources.push_back(source);
 
     return sources.size() - 1;
@@ -98,6 +99,7 @@ Java_com_armsaudio_ArmsaudioModule_setPosition(JNIEnv *env, jobject thiz, jfloat
     sPlayer.setPosition(position);
     for (auto &source : sources) {
         source->setPosition(position);
+        source->setSteamPosition(position);
     }
 
     sPlayer.resume();

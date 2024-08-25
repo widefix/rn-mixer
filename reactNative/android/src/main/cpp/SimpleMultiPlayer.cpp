@@ -51,8 +51,7 @@ namespace iolib {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
 
-        memset(audioData, 0, static_cast<size_t>(numFrames) * static_cast<size_t>
-        (mParent->mChannelCount) * sizeof(float));
+        memset(audioData, 0, static_cast<size_t>(numFrames) * static_cast<size_t>(mParent->mChannelCount) * sizeof(float));
 
         for(int32_t index = 0; index < mParent->mNumSampleSources; index++) {
             if (mParent->mSampleSources[index]->isPlaying()) {
@@ -78,6 +77,10 @@ namespace iolib {
 
     void SimpleMultiPlayer::setPosition(float position) {
         this->position = position;
+        // set data position for each source stream
+        for(int32_t index = 0; index < mNumSampleSources; index++) {
+            mSampleSources[index]->setSteamPosition(position);
+        }
     }
 
     bool SimpleMultiPlayer::openStream() {
@@ -177,8 +180,8 @@ void SimpleMultiPlayer::unloadSampleData() {
     __android_log_print(ANDROID_LOG_INFO, TAG, "unloadSampleData()");
     resetAll();
 
-    for (int32_t bufferIndex = 0; bufferIndex < mNumSampleSources; bufferIndex++) {
-        delete mSampleSources[bufferIndex];
+    for (int32_t i = 0; i < mNumSampleSources; i++) {
+        delete mSampleSources[i];
     }
 
     mSampleSources.clear();
@@ -187,6 +190,8 @@ void SimpleMultiPlayer::unloadSampleData() {
 }
 
 void SimpleMultiPlayer::triggerDown(int32_t index) {
+    __android_log_print(ANDROID_LOG_ERROR, TAG, "triggerDown(%d)", index);
+    __android_log_print(ANDROID_LOG_ERROR, TAG, "triggerDown mNumSampleSources(%d)", mNumSampleSources);
     if (index < mNumSampleSources) {
         mSampleSources[index]->setPlayMode();
     }
@@ -207,8 +212,8 @@ void SimpleMultiPlayer::resume() {
 }
 
 void SimpleMultiPlayer::resetAll() {
-    for (int32_t bufferIndex = 0; bufferIndex < mNumSampleSources; bufferIndex++) {
-        mSampleSources[bufferIndex]->setStopMode();
+    for (int32_t i = 0; i < mNumSampleSources; i++) {
+        mSampleSources[i]->setStopMode();
     }
 }
 
