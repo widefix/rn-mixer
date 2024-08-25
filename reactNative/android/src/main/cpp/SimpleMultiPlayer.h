@@ -119,6 +119,7 @@ namespace iolib {
         std::shared_ptr<MyErrorCallback> mErrorCallback;
 
         std::vector<parselib::WavStreamReader> readers;
+        std::vector<std::shared_ptr<parselib::InputStream>> streams;
         float position;
     };
 

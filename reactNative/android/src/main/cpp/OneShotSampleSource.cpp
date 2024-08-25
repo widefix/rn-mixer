@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include <android/log.h>
 
 #include "wav/WavStreamReader.h"
 
@@ -31,36 +32,43 @@ namespace iolib {
                                  : 0;
 
         float* buffer = new float[numWriteFrames * sampleChannels];
+
         reader->getDataFloat(buffer, numWriteFrames);
 
         if (numWriteFrames != 0) {
-            const float* data  = mSampleBuffer->getSampleData();
             if ((sampleChannels == 1) && (numChannels == 1)) {
                 // MONO output from MONO samples
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[frameIndex] += data[mCurSampleIndex++] * mGain;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex++;
+                    outBuff[frameIndex] += buffer[frameIndex++] * mGain;
                 }
             } else if ((sampleChannels == 1) && (numChannels == 2)) {
                 // STEREO output from MONO samples
                 int dstSampleIndex = 0;
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[mCurSampleIndex] * mLeftGain;
-                    outBuff[dstSampleIndex++] += data[mCurSampleIndex++] * mRightGain;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex++;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex] * mLeftGain;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
                 }
             } else if ((sampleChannels == 2) && (numChannels == 1)) {
                 // MONO output from STEREO samples
                 int dstSampleIndex = 0;
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += data[mCurSampleIndex++] * mLeftGain +
-                                                 data[mCurSampleIndex++] * mRightGain;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex += 2;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain +
+                                                 buffer[frameIndex++] * mRightGain;
                 }
             } else if ((sampleChannels == 2) && (numChannels == 2)) {
                 // STEREO output from STEREO samples
+
+                __android_log_print(ANDROID_LOG_DEBUG, "OneShotSampleSource", "STEREO output from STEREO samples");
                 int dstSampleIndex = 0;
 
-                for (int32_t frameIndex = 0; frameIndex < numWriteFrames; frameIndex++) {
-                    outBuff[dstSampleIndex++] += buffer[mCurSampleIndex++] * mLeftGain;
-                    outBuff[dstSampleIndex++] += buffer[mCurSampleIndex++] * mRightGain;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    // log frameIndex
+                    mCurSampleIndex += 2;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
                 }
             }
 
