@@ -190,10 +190,9 @@ void SimpleMultiPlayer::unloadSampleData() {
 }
 
 void SimpleMultiPlayer::triggerDown(int32_t index) {
-    __android_log_print(ANDROID_LOG_ERROR, TAG, "triggerDown(%d)", index);
-    __android_log_print(ANDROID_LOG_ERROR, TAG, "triggerDown mNumSampleSources(%d)", mNumSampleSources);
     if (index < mNumSampleSources) {
         mSampleSources[index]->setPlayMode();
+        mSampleSources[index]->setPosition(0);
     }
 }
 
