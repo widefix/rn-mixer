@@ -211,11 +211,13 @@ void SimpleMultiPlayer::triggerUp(int32_t index) {
 
 void SimpleMultiPlayer::addReader(const char* fileName) {
     auto f = open(fileName, O_RDONLY);
-    auto stream = parselib::FileInputStream(f);
-    auto reader = parselib::WavStreamReader(&stream);
+    auto stream = std::make_shared<parselib::FileInputStream>(f);
+    auto reader = parselib::WavStreamReader(stream.get());
     reader.parse();
     reader.positionToAudio();
+
     readers.push_back(reader);
+    streams.push_back(stream);
 }
 
 void SimpleMultiPlayer::pause() {
