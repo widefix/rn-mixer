@@ -214,7 +214,6 @@ void SimpleMultiPlayer::addReader(const char* fileName) {
     auto stream = std::make_shared<parselib::FileInputStream>(f);
     auto reader = parselib::WavStreamReader(stream.get());
     reader.parse();
-    reader.positionToAudio();
 
     readers.push_back(reader);
     streams.push_back(stream);
