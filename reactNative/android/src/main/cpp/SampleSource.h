@@ -20,16 +20,13 @@
 #include <cstdint>
 
 #include "DataSource.h"
-
-#include "SampleBuffer.h"
+#include "stream/FileInputStream.h"
+#include "wav/WavStreamReader.h"
+#include "fstream"
+#include <fcntl.h>
+#include <unistd.h>
 
 namespace iolib {
-
-/**
- * Defines an interface for audio data provided to a player object.
- * Concrete examples include OneShotSampleBuffer. One could imagine a LoopingSampleBuffer.
- * Supports stereo position via mPan member.
- */
     class SampleSource: public DataSource {
     public:
         // Pan position of the audio in a stereo mix
@@ -38,13 +35,20 @@ namespace iolib {
         static constexpr float PAN_HARDRIGHT = 1.0f;
         static constexpr float PAN_CENTER = 0.0f;
 
-        SampleSource(SampleBuffer *sampleBuffer, float pan);
-        virtual ~SampleSource() {}
+        SampleSource(const char* fileName, float pan);
+        virtual ~SampleSource() {
+            close(mFileDescriptor);
+        }
 
         void setPlayMode() { mCurSampleIndex = 0; mIsPlaying = true; }
         void setStopMode() { mIsPlaying = false; mCurSampleIndex = 0; }
 
         bool isPlaying() { return mIsPlaying; }
+
+        void setSteamPosition(int position) {
+            mStreamPosition = position;
+            mStream.setPos(position);
+        }
 
         void setPan(float pan) {
             if (pan < PAN_HARDLEFT) {
@@ -70,9 +74,12 @@ namespace iolib {
             return mGain;
         }
 
-    protected:
-        SampleBuffer    *mSampleBuffer;
+        virtual void mixAudio(float* outBuff, int numChannels, int32_t numFrames);
+        float getPosition();
+        void setPosition(float position);
+        float getAmplitude();
 
+    protected:
         int32_t mCurSampleIndex;
 
         bool mIsPlaying;
@@ -87,10 +94,14 @@ namespace iolib {
         // Overall gain
         float mGain;
 
-        // Max Track Amplitude
-        float mMaxAmplitude = 1;
-
     private:
+        int mStreamPosition = 0;
+        int mFileDescriptor;
+        const char* mFileName;
+
+        parselib::FileInputStream mStream;
+        parselib::WavStreamReader mReader;
+
         void calcGainFactors() {
             // useful panning information: http://www.cs.cmu.edu/~music/icm-online/readings/panlaws/
             float rightPan = (mPan * 0.5) + 0.5;

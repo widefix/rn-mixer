@@ -15,42 +15,126 @@
  */
 
 #include "SampleSource.h"
+#include <android/log.h>
 
 namespace iolib {
 
-    SampleSource::SampleSource(SampleBuffer *sampleBuffer, float pan)
-            : mSampleBuffer(sampleBuffer), mCurSampleIndex(0), mIsPlaying(false), mGain(1.0f)
+    SampleSource::SampleSource(const char* fileName, float pan)
+            :
+              mFileName(fileName),
+              mFileDescriptor(open(fileName, O_RDONLY)),
+              mStream(parselib::FileInputStream(mFileDescriptor)),  // Initialize mStream with the file descriptor
+              mReader(parselib::WavStreamReader(&mStream)),  // Initialize the reader with the stream
+              mCurSampleIndex(0),
+              mIsPlaying(false),
+              mGain(1.0f)
     {
+        mReader.parse();
         setPan(pan);
+    }
 
-        // Calculating maximum average amplitude for the track
-        auto data = mSampleBuffer->getSampleData();
-        auto total = mSampleBuffer->getNumSamples();
-        float maxAmplitude = 0;
+    void SampleSource::mixAudio(float* outBuff, int numChannels, int32_t numFrames) {
+        __android_log_print(ANDROID_LOG_ERROR, "SampleSource", "mix %d", numFrames);
+        int32_t sampleChannels = mReader.getNumChannels();
+        int32_t numSamples = mReader.getNumSampleFrames() * sampleChannels;
+        int32_t samplesLeft = numSamples - mCurSampleIndex;
+        int32_t numWriteFrames = mIsPlaying
+                                 ? std::min(numFrames, samplesLeft / sampleChannels)
+                                 : 0;
 
-        // We'll take average for a chunk since that is a good practical approximation
-        int chunkSize = 2048;
-        for (int i = 0; i < total; i+=chunkSize) {
-            // Skipping last chunk to avoid dealing with end-of-data bounds
-            if ((total - i) < chunkSize)
-                continue;
+        float* buffer = new float[numWriteFrames * sampleChannels];
 
-            // Calculate average amplitude for the chunk
-            float averageAmplitude = 0;
-            for (int j = 0; j < chunkSize; j++) {
-                float f = data[i + j];
-                if (f < 0) f *= -1;
-                averageAmplitude += f;
+        mReader.getDataFloat(buffer, numWriteFrames);
+
+        if (numWriteFrames != 0) {
+            if ((sampleChannels == 1) && (numChannels == 1)) {
+                // MONO output from MONO samples
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex++;
+                    outBuff[frameIndex] += buffer[frameIndex++] * mGain;
+                }
+            } else if ((sampleChannels == 1) && (numChannels == 2)) {
+                // STEREO output from MONO samples
+                int dstSampleIndex = 0;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex++;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex] * mLeftGain;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
+                }
+            } else if ((sampleChannels == 2) && (numChannels == 1)) {
+                // MONO output from STEREO samples
+                int dstSampleIndex = 0;
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    mCurSampleIndex += 2;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain +
+                                                 buffer[frameIndex++] * mRightGain;
+                }
+            } else if ((sampleChannels == 2) && (numChannels == 2)) {
+                // STEREO output from STEREO samples
+                int dstSampleIndex = 0;
+
+                for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
+                    // log frameIndex
+                    mCurSampleIndex += 2;
+                    // log buffer[frameIndex]
+                    __android_log_print(ANDROID_LOG_ERROR, "SampleSource", "buffer[frameIndex]: %f", buffer[frameIndex]);
+
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain;
+                    outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
+                }
             }
 
-            averageAmplitude /= (float)chunkSize;
-
-            // Update the max amp if necessary
-            if (averageAmplitude > maxAmplitude)
-                maxAmplitude = averageAmplitude;
+            if (mCurSampleIndex >= numSamples) {
+                mIsPlaying = false;
+            }
         }
 
-        mMaxAmplitude = maxAmplitude;
+        delete[] buffer;
+
+        // silence
+        // no need as the output buffer would need to have been filled with silence
+        // to be mixed into
+    }
+
+    float SampleSource::getPosition() {
+        auto current = static_cast<float>(mCurSampleIndex);
+        auto total = static_cast<float>(mReader.getNumSampleFrames());
+
+        return current / total;
+    }
+
+    void SampleSource::setPosition(float position) {
+        auto total = static_cast<float>(mReader.getNumSampleFrames());
+        auto newPosition = static_cast<int>(position * total);
+        if (newPosition % 2 == 1)
+            newPosition--;
+
+        mCurSampleIndex = newPosition;
+    }
+
+    float SampleSource::getAmplitude() {
+        // TODO: keep the buffer and use it to calculate the amplitude
+        return 0.5;
+
+        // auto firstIndex = mCurSampleIndex - 2000;
+        // auto lastIndex = mCurSampleIndex;
+
+        // if (firstIndex < 0) firstIndex = 0;
+
+        // if (lastIndex == firstIndex)
+        //     return 0;
+
+        // float unScaledAverage = 0;
+        // auto data = mSampleBuffer->getSampleData();
+        // for (int i = firstIndex; i < lastIndex; i++) {
+        //     float f = data[i];
+        //     if (f < 0) f *= -1;
+        //     unScaledAverage += f;
+        // }
+
+        // float scaledAverage = unScaledAverage / mMaxAmplitude;
+
+        // return (scaledAverage * mGain) / (float)(lastIndex - firstIndex);
     }
 
 }
