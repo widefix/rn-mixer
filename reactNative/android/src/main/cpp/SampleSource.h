@@ -93,6 +93,7 @@ namespace iolib {
     private:
         int mFileDescriptor;
         const char* mFileName;
+        float mLastAmplitude = 0.0f;
 
         parselib::FileInputStream mStream;
         parselib::WavStreamReader mReader;
@@ -102,6 +103,8 @@ namespace iolib {
             float rightPan = (mPan * 0.5) + 0.5;
             mRightGain = rightPan * mGain;
             mLeftGain = (1.0 - rightPan) * mGain;    }
+
+
     };
 
 } // namespace wavlib
