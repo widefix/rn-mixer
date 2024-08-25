@@ -114,12 +114,11 @@ namespace parselib {
         }
     }
 
-    void WavStreamReader::setDataPosition(float tPos) {
-        // tPos in the seconds, calculate position in bytes
-        int pos = (int) (tPos * mFmtChunk->mSampleRate * mFmtChunk->mNumChannels * mFmtChunk->mSampleSize / 8);
+    void WavStreamReader::setDataPosition(int frameIndex) {
+        int shift = frameIndex * mFmtChunk->mNumChannels * (mFmtChunk->mSampleSize / 8);
 
         if (mDataChunk != 0) {
-            mStream->setPos(mAudioDataStartPos + pos);
+            mStream->setPos(mAudioDataStartPos + shift);
         }
     }
 
