@@ -79,7 +79,7 @@ namespace iolib {
         this->position = position;
         // set data position for each source stream
         for(int32_t index = 0; index < mNumSampleSources; index++) {
-            mSampleSources[index]->setSteamPosition(position);
+            mSampleSources[index]->setPosition(position);
         }
     }
 

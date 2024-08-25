@@ -15,7 +15,6 @@
  */
 
 #include "SampleSource.h"
-#include <android/log.h>
 
 namespace iolib {
 
@@ -34,7 +33,6 @@ namespace iolib {
     }
 
     void SampleSource::mixAudio(float* outBuff, int numChannels, int32_t numFrames) {
-        __android_log_print(ANDROID_LOG_ERROR, "SampleSource", "mix %d", numFrames);
         int32_t sampleChannels = mReader.getNumChannels();
         int32_t numSamples = mReader.getNumSampleFrames() * sampleChannels;
         int32_t samplesLeft = numSamples - mCurSampleIndex;
@@ -74,10 +72,7 @@ namespace iolib {
                 int dstSampleIndex = 0;
 
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
-                    // log frameIndex
                     mCurSampleIndex += 2;
-                    // log buffer[frameIndex]
-                    __android_log_print(ANDROID_LOG_ERROR, "SampleSource", "buffer[frameIndex]: %f", buffer[frameIndex]);
 
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain;
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
@@ -110,6 +105,7 @@ namespace iolib {
             newPosition--;
 
         mCurSampleIndex = newPosition;
+        mReader.setDataPosition(mCurSampleIndex);
     }
 
     float SampleSource::getAmplitude() {
