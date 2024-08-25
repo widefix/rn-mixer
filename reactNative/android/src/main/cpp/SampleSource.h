@@ -19,7 +19,6 @@
 
 #include <cstdint>
 
-#include "DataSource.h"
 #include "stream/FileInputStream.h"
 #include "wav/WavStreamReader.h"
 #include "fstream"
@@ -28,7 +27,7 @@
 #include <android/log.h>
 
 namespace iolib {
-    class SampleSource: public DataSource {
+    class SampleSource {
     public:
         // Pan position of the audio in a stereo mix
         // [left:-1.0f] <- [center: 0.0f] -> -[right: 1.0f]
