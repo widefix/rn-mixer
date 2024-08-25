@@ -44,11 +44,16 @@ namespace iolib {
 
         mReader.getDataFloat(buffer, numWriteFrames);
 
+        float amplitudeMax = 0;
+
         if (numWriteFrames != 0) {
             if ((sampleChannels == 1) && (numChannels == 1)) {
                 // MONO output from MONO samples
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex++;
+                    if (buffer[frameIndex] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex];
+                    }
                     outBuff[frameIndex] += buffer[frameIndex++] * mGain;
                 }
             } else if ((sampleChannels == 1) && (numChannels == 2)) {
@@ -56,6 +61,9 @@ namespace iolib {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex++;
+                    if (buffer[frameIndex] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex];
+                    }
                     outBuff[dstSampleIndex++] += buffer[frameIndex] * mLeftGain;
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
                 }
@@ -64,6 +72,12 @@ namespace iolib {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex += 2;
+                    if (buffer[frameIndex] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex];
+                    }
+                    if (buffer[frameIndex + 1] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex + 1];
+                    }
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain +
                                                  buffer[frameIndex++] * mRightGain;
                 }
@@ -73,7 +87,12 @@ namespace iolib {
 
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex += 2;
-
+                    if (buffer[frameIndex] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex];
+                    }
+                    if (buffer[frameIndex + 1] > amplitudeMax) {
+                        amplitudeMax = buffer[frameIndex + 1];
+                    }
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain;
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
                 }
@@ -84,6 +103,7 @@ namespace iolib {
             }
         }
 
+        mLastAmplitude = amplitudeMax;
         delete[] buffer;
 
         // silence
@@ -109,28 +129,7 @@ namespace iolib {
     }
 
     float SampleSource::getAmplitude() {
-        // TODO: keep the buffer and use it to calculate the amplitude
-        return 0.5;
-
-        // auto firstIndex = mCurSampleIndex - 2000;
-        // auto lastIndex = mCurSampleIndex;
-
-        // if (firstIndex < 0) firstIndex = 0;
-
-        // if (lastIndex == firstIndex)
-        //     return 0;
-
-        // float unScaledAverage = 0;
-        // auto data = mSampleBuffer->getSampleData();
-        // for (int i = firstIndex; i < lastIndex; i++) {
-        //     float f = data[i];
-        //     if (f < 0) f *= -1;
-        //     unScaledAverage += f;
-        // }
-
-        // float scaledAverage = unScaledAverage / mMaxAmplitude;
-
-        // return (scaledAverage * mGain) / (float)(lastIndex - firstIndex);
+        return mLastAmplitude;
     }
 
 }
