@@ -97,11 +97,6 @@ JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_setPosition(JNIEnv *env, jobject thiz, jfloat position) {
     sPlayer.pause();
     sPlayer.setPosition(position);
-    for (auto &source : sources) {
-        source->setPosition(position);
-        source->setSteamPosition(position);
-    }
-
     sPlayer.resume();
 }
 

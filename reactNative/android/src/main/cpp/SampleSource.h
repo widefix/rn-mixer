@@ -25,6 +25,7 @@
 #include "fstream"
 #include <fcntl.h>
 #include <unistd.h>
+#include <android/log.h>
 
 namespace iolib {
     class SampleSource: public DataSource {
@@ -44,11 +45,6 @@ namespace iolib {
         void setStopMode() { mIsPlaying = false; mCurSampleIndex = 0; }
 
         bool isPlaying() { return mIsPlaying; }
-
-        void setSteamPosition(int tPosition) {
-            mStreamPosition = tPosition;
-            mReader.setDataPosition(tPosition);
-        }
 
         void setPan(float pan) {
             if (pan < PAN_HARDLEFT) {
@@ -95,7 +91,6 @@ namespace iolib {
         float mGain;
 
     private:
-        int mStreamPosition = 0;
         int mFileDescriptor;
         const char* mFileName;
 
