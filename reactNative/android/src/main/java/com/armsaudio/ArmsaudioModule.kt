@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.ReactConstants.TAG
@@ -78,6 +79,12 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> handleAudioFocusLossTransient()
             AudioManager.AUDIOFOCUS_GAIN -> handleAudioFocusGain()
         }
+    }
+
+    private val lifecycleEventListener = object : LifecycleEventListener {
+        override fun onHostResume() = resumeAudio()
+        override fun onHostPause() = pauseAudio()
+        override fun onHostDestroy() = pauseAudio()
     }
 
     private fun requestAudioFocus(): Boolean {
@@ -178,6 +185,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     private fun playAudio() {
         if (requestAudioFocus()) {
+            reactApplicationContext.addLifecycleEventListener(lifecycleEventListener);
             playAudioInternal()
             startAmplitudeUpdate()
             startProgressUpdateTimer()
@@ -357,6 +365,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     private fun resetApp() {
         // Stop and release all media players
         resetPlayer()
+        reactApplicationContext.removeLifecycleEventListener(lifecycleEventListener)
         deleteCache(reactApplicationContext)
         audioTracks.clear()
 
