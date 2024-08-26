@@ -434,7 +434,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
         outputFile: File,
         outputFileHandler: (File) -> Unit
     ) {
-        val session = FFmpegKit.execute("-i $inputFile $outputFile")
+        val session = FFmpegKit.execute("-i $inputFile -ar 48000 $outputFile")
         if (ReturnCode.isSuccess(session.returnCode)) {
             outputFileHandler.invoke(outputFile)
         } else if (ReturnCode.isCancel(session.returnCode)) {
