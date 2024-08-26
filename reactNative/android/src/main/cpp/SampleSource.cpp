@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+#include <math.h>
 #include "SampleSource.h"
+
+static const char *TAG = "SampleSource";
+static const float MIN_DB = -40;
 
 namespace iolib {
 
@@ -30,6 +34,50 @@ namespace iolib {
     {
         mReader.parse();
         setPan(pan);
+
+        auto total = mReader.getNumSampleFrames();
+
+        float minDecibels = 0;
+        float maxDecibels = MIN_DB;
+
+        // We'll take average for a chunk since that is a good practical approximation
+        int chunkSize = 2048;
+        float* buffer = new float[2048];
+        for (int i = 0; i < total; i+=chunkSize) {
+            // Skipping last chunk to avoid dealing with end-of-data bounds
+            if ((total - i) < chunkSize)
+                continue;
+
+            // Calculate average amplitude for the chunk
+            float minAmplitude = 1;
+            float maxAmplitude = 0;
+            mReader.getDataFloat(buffer, 2048 / mReader.getNumChannels());
+            for (int j = 0; j < chunkSize; j++) {
+                float f = buffer[j];
+                if (f < 0) f *= -1;
+
+                if (f > maxAmplitude)
+                    maxAmplitude = f;
+
+                if (f < minAmplitude)
+                    minAmplitude = f;
+            }
+
+            float tmpMinDecibels;
+            if (minAmplitude == 0)
+                tmpMinDecibels = MIN_DB;
+            else tmpMinDecibels = fmax(MIN_DB, log10(minAmplitude) * (float)10);
+            if (tmpMinDecibels < minDecibels)
+                minDecibels = tmpMinDecibels;
+
+            float tmpMaxDecibels = log10(maxAmplitude) * (float)10;
+            if (tmpMaxDecibels > maxDecibels)
+                maxDecibels = tmpMaxDecibels;
+        }
+
+        delete[] buffer;
+        mMinDecibels = minDecibels;
+        mMaxDecibels = maxDecibels;
     }
 
     void SampleSource::mixAudio(float* outBuff, int numChannels, int32_t numFrames) {
@@ -51,8 +99,8 @@ namespace iolib {
                 // MONO output from MONO samples
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex++;
-                    if (buffer[frameIndex] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex];
+                    if (abs(buffer[frameIndex]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex]);
                     }
                     outBuff[frameIndex] += buffer[frameIndex++] * mGain;
                 }
@@ -61,8 +109,8 @@ namespace iolib {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex++;
-                    if (buffer[frameIndex] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex];
+                    if (abs(buffer[frameIndex]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex]);
                     }
                     outBuff[dstSampleIndex++] += buffer[frameIndex] * mLeftGain;
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
@@ -72,11 +120,11 @@ namespace iolib {
                 int dstSampleIndex = 0;
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex += 2;
-                    if (buffer[frameIndex] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex];
+                    if (abs(buffer[frameIndex]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex]);
                     }
-                    if (buffer[frameIndex + 1] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex + 1];
+                    if (abs(buffer[frameIndex + 1]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex + 1]);
                     }
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain +
                                                  buffer[frameIndex++] * mRightGain;
@@ -87,11 +135,11 @@ namespace iolib {
 
                 for (int32_t frameIndex = 0; frameIndex < numWriteFrames * sampleChannels;) {
                     mCurSampleIndex += 2;
-                    if (buffer[frameIndex] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex];
+                    if (abs(buffer[frameIndex]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex]);
                     }
-                    if (buffer[frameIndex + 1] > amplitudeMax) {
-                        amplitudeMax = buffer[frameIndex + 1];
+                    if (abs(buffer[frameIndex + 1]) > amplitudeMax) {
+                        amplitudeMax = abs(buffer[frameIndex + 1]);
                     }
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mLeftGain;
                     outBuff[dstSampleIndex++] += buffer[frameIndex++] * mRightGain;
@@ -103,7 +151,12 @@ namespace iolib {
             }
         }
 
-        mLastAmplitude = amplitudeMax;
+        float logPower = fmax((float)MIN_DB, log10(amplitudeMax) * (float)10);
+        __android_log_print(ANDROID_LOG_INFO, TAG, "log power %f", logPower);
+        __android_log_print(ANDROID_LOG_INFO, TAG, "min decibels %f", mMinDecibels);
+        __android_log_print(ANDROID_LOG_INFO, TAG, "max decibels %f", mMaxDecibels);
+        float scaledPower = fmin((float)1, (logPower - mMinDecibels) / (mMaxDecibels - mMinDecibels));
+        mLastAmplitude = scaledPower * mGain;
         delete[] buffer;
 
         // silence
