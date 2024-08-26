@@ -92,6 +92,8 @@ namespace iolib {
     private:
         int mFileDescriptor;
         const char* mFileName;
+        float mMinDecibels;
+        float mMaxDecibels;
         float mLastAmplitude = 0.0f;
 
         parselib::FileInputStream mStream;
