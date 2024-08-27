@@ -152,9 +152,6 @@ namespace iolib {
         }
 
         float logPower = fmax((float)MIN_DB, log10(amplitudeMax) * (float)10);
-        __android_log_print(ANDROID_LOG_INFO, TAG, "log power %f", logPower);
-        __android_log_print(ANDROID_LOG_INFO, TAG, "min decibels %f", mMinDecibels);
-        __android_log_print(ANDROID_LOG_INFO, TAG, "max decibels %f", mMaxDecibels);
         float scaledPower = fmin((float)1, (logPower - mMinDecibels) / (mMaxDecibels - mMinDecibels));
         mLastAmplitude = scaledPower * mGain;
         delete[] buffer;
