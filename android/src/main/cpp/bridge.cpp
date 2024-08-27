@@ -4,16 +4,12 @@
 #include "SimpleMultiPlayer.h"
 #include "stream/FileInputStream.h"
 #include "wav/WavStreamReader.h"
-#include "SampleBuffer.h"
 #include "SampleSource.h"
 
 #include "vector"
-#include "fstream"
-#include <fcntl.h>
 
 static iolib::SimpleMultiPlayer sPlayer;
-static std::vector<iolib::SampleBuffer*> buffers;
-static std::vector<iolib::OneShotSampleSource*> sources;
+static std::vector<iolib::SampleSource*> sources;
 
 extern "C"
 JNIEXPORT jlong JNICALL
@@ -33,26 +29,16 @@ JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_resetPlayer(JNIEnv *env, jobject thiz) {
     sPlayer.unloadSampleData();
     sources.clear();
-    buffers.clear();
 }
 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_armsaudio_ArmsaudioModule_loadTrack(JNIEnv *env, jobject thiz, jstring fileName) {
-    auto f = open(env->GetStringUTFChars(fileName, 0), O_RDONLY);
-    auto stream = parselib::FileInputStream(f);
-    auto reader = parselib::WavStreamReader(&stream);
-    reader.parse();
-    auto buffer = new iolib::SampleBuffer();
-    buffer->loadSampleData(&reader);
-    buffers.push_back(buffer);
-    auto source = new iolib::OneShotSampleSource(buffer, 1);
+    auto source = new iolib::SampleSource(env->GetStringUTFChars(fileName, 0), 1);
+    sPlayer.addSampleSource(source);
     sources.push_back(source);
-    sPlayer.addSampleSource(source, buffer);
 
-    close(f);
-
-    return buffers.size() - 1;
+    return sources.size() - 1;
 }
 
 extern "C"
@@ -110,10 +96,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_setPosition(JNIEnv *env, jobject thiz, jfloat position) {
     sPlayer.pause();
-    for (auto &source : sources) {
-        source->setPosition(position);
-    }
-
+    sPlayer.setPosition(position);
     sPlayer.resume();
 }
 

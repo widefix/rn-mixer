@@ -51,6 +51,7 @@ namespace parselib {
 
         // Data access
         void positionToAudio();
+        void setDataPosition(int frameIndex);
 
         static constexpr int ERR_INVALID_FORMAT    = -1;
         static constexpr int ERR_INVALID_STATE    = -2;

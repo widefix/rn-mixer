@@ -21,8 +21,7 @@
 
 #include <oboe/Oboe.h>
 
-#include "OneShotSampleSource.h"
-#include "SampleBuffer.h"
+#include "SampleSource.h"
 
 namespace iolib {
 
@@ -41,14 +40,8 @@ namespace iolib {
 
         int getSampleRate() { return mSampleRate; }
 
-        // Wave Sample Loading...
-        /**
-         * Adds the SampleSource/SampleBuffer pair to the list of source channels.
-         * Transfers ownership of those objects so that they can be deleted/unloaded.
-         * The indexes associated with each source channel is the order in which they
-         * are added.
-         */
-        void addSampleSource(SampleSource* source, SampleBuffer* buffer);
+        void addSampleSource(SampleSource* source);
+
         /**
          * Deallocates and deletes all added source/buffer (see addSampleSource()).
          */
@@ -70,6 +63,7 @@ namespace iolib {
 
         void setGain(int index, float gain);
         float getGain(int index);
+        void setPosition(float position);
 
     private:
         class MyDataCallback : public oboe::AudioStreamDataCallback {
@@ -106,14 +100,15 @@ namespace iolib {
         int32_t mSampleRate;
 
         // Sample Data
-        int32_t mNumSampleBuffers;
-        std::vector<SampleBuffer*>  mSampleBuffers;
+        int32_t mNumSampleSources;
         std::vector<SampleSource*>  mSampleSources;
 
         bool    mOutputReset;
 
         std::shared_ptr<MyDataCallback> mDataCallback;
         std::shared_ptr<MyErrorCallback> mErrorCallback;
+
+        float position;
     };
 
 }

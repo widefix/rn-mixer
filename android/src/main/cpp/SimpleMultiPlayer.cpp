@@ -22,6 +22,11 @@
 // local includes
 #include "SimpleMultiPlayer.h"
 
+#include "fstream"
+#include "stream/FileInputStream.h"
+#include <fcntl.h>
+
+
 static const char* TAG = "SimpleMultiPlayer";
 
 using namespace oboe;
@@ -32,13 +37,12 @@ namespace iolib {
     constexpr int32_t kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 
     SimpleMultiPlayer::SimpleMultiPlayer()
-            : mChannelCount(0), mOutputReset(false), mSampleRate(0), mNumSampleBuffers(0)
+            : mChannelCount(0), mOutputReset(false), mSampleRate(0), mNumSampleSources(0), position(0)
     {}
 
     DataCallbackResult SimpleMultiPlayer::MyDataCallback::onAudioReady(AudioStream *oboeStream,
                                                                        void *audioData,
                                                                        int32_t numFrames) {
-
         StreamState streamState = oboeStream->getState();
         if (streamState != StreamState::Open && streamState != StreamState::Started) {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState:%d", streamState);
@@ -47,14 +51,15 @@ namespace iolib {
             __android_log_print(ANDROID_LOG_ERROR, TAG, "  streamState::Disconnected");
         }
 
-        memset(audioData, 0, static_cast<size_t>(numFrames) * static_cast<size_t>
-        (mParent->mChannelCount) * sizeof(float));
+        memset(audioData, 0, static_cast<size_t>(numFrames) * static_cast<size_t>(mParent->mChannelCount) * sizeof(float));
 
-        // OneShotSampleSource* sources = mSampleSources.get();
-        for(int32_t index = 0; index < mParent->mNumSampleBuffers; index++) {
+        for(int32_t index = 0; index < mParent->mNumSampleSources; index++) {
             if (mParent->mSampleSources[index]->isPlaying()) {
-                mParent->mSampleSources[index]->mixAudio((float*)audioData, mParent->mChannelCount,
-                                                         numFrames);
+                mParent->mSampleSources[index]->mixAudio(
+                    (float*)audioData,
+                    mParent->mChannelCount,
+                    numFrames
+                );
             }
         }
 
@@ -67,6 +72,14 @@ namespace iolib {
         mParent->resetAll();
         if (mParent->openStream() && mParent->startStream()) {
             mParent->mOutputReset = true;
+        }
+    }
+
+    void SimpleMultiPlayer::setPosition(float position) {
+        this->position = position;
+        // set data position for each source stream
+        for(int32_t index = 0; index < mNumSampleSources; index++) {
+            mSampleSources[index]->setPosition(position);
         }
     }
 
@@ -158,37 +171,33 @@ void SimpleMultiPlayer::teardownAudioStream() {
     }
 }
 
-void SimpleMultiPlayer::addSampleSource(SampleSource* source, SampleBuffer* buffer) {
-    buffer->resampleData(mSampleRate);
-
-    mSampleBuffers.push_back(buffer);
+void SimpleMultiPlayer::addSampleSource(SampleSource* source) {
     mSampleSources.push_back(source);
-    mNumSampleBuffers++;
+    mNumSampleSources++;
 }
 
 void SimpleMultiPlayer::unloadSampleData() {
     __android_log_print(ANDROID_LOG_INFO, TAG, "unloadSampleData()");
     resetAll();
 
-    for (int32_t bufferIndex = 0; bufferIndex < mNumSampleBuffers; bufferIndex++) {
-        delete mSampleBuffers[bufferIndex];
-        delete mSampleSources[bufferIndex];
+    for (int32_t i = 0; i < mNumSampleSources; i++) {
+        delete mSampleSources[i];
     }
 
-    mSampleBuffers.clear();
     mSampleSources.clear();
 
-    mNumSampleBuffers = 0;
+    mNumSampleSources = 0;
 }
 
 void SimpleMultiPlayer::triggerDown(int32_t index) {
-    if (index < mNumSampleBuffers) {
+    if (index < mNumSampleSources) {
         mSampleSources[index]->setPlayMode();
+        mSampleSources[index]->setPosition(0);
     }
 }
 
 void SimpleMultiPlayer::triggerUp(int32_t index) {
-    if (index < mNumSampleBuffers) {
+    if (index < mNumSampleSources) {
         mSampleSources[index]->setStopMode();
     }
 }
@@ -202,8 +211,8 @@ void SimpleMultiPlayer::resume() {
 }
 
 void SimpleMultiPlayer::resetAll() {
-    for (int32_t bufferIndex = 0; bufferIndex < mNumSampleBuffers; bufferIndex++) {
-        mSampleSources[bufferIndex]->setStopMode();
+    for (int32_t i = 0; i < mNumSampleSources; i++) {
+        mSampleSources[i]->setStopMode();
     }
 }
 

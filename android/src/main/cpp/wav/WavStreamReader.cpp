@@ -114,6 +114,14 @@ namespace parselib {
         }
     }
 
+    void WavStreamReader::setDataPosition(int frameIndex) {
+        int shift = frameIndex * mFmtChunk->mNumChannels * (mFmtChunk->mSampleSize / 8);
+
+        if (mDataChunk != 0) {
+            mStream->setPos(mAudioDataStartPos + shift);
+        }
+    }
+
 /**
  * Read and convert samples in PCM8 format to float
  */
