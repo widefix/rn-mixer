@@ -173,6 +173,16 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun addListener(type: String?) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun removeListeners(type: Int?) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
     private fun testLibrary() {
         val expected = 17L
         val actual = testFunction()
