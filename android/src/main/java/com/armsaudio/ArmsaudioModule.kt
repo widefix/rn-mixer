@@ -221,22 +221,21 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
         scope.launch {
             val deferreds = urls.map { url ->
-                async(Dispatchers.IO) {  // Run the heavy operations on the IO dispatcher
+                async(Dispatchers.IO) {
                     val file = downloadFile(url)
                     if (file == null) {
                         hasErrorOccurred = true
                         sendGenAppErrors("Failed to download file: ${url.path}")
                     } else {
-                        convertAndAddTrack(file)  // Process the file
+                        convertAndAddTrack(file)
                     }
                     file
                 }
             }
 
             deferreds.forEach { deferred ->
-                val file = deferred.await()  // Wait for the file to be processed
+                val file = deferred.await()
 
-                // Once each file is done, update the UI on the main thread
                 withContext(Dispatchers.Main) {
                     doneActions += 1
                     downloadProgress = doneActions.toDouble() / totalActions

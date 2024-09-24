@@ -394,7 +394,14 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
             if hasErrorOccurred {
                 self.resetApp()
             } else {
-                let duration = self.audioPlayers.first?.value.duration ?? 0.0
+                var duration = 0.0
+
+                self.audioPlayers.forEach { (fileName, player) in
+                    if player.duration > duration {
+                        duration = player.duration
+                    }
+                }
+
                 self.isMixBtnClicked = true
                 self.sendProgressUpdate(1.0)
                 self.sendEvent(withName: "DownloadComplete", body: downloadedFileNames)
