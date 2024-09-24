@@ -51,6 +51,19 @@ Java_com_armsaudio_ArmsaudioModule_playAudioInternal(JNIEnv *env,jobject obj) {
 }
 
 extern "C"
+JNIEXPORT jfloat JNICALL
+Java_com_armsaudio_ArmsaudioModule_getMaxPlaybackDuration(JNIEnv *env, jobject thiz) {
+    jfloat maxDuration = 0.0f;
+    for (int i = 0; i < sources.size(); ++i) {
+        float duration = sources[i]->getDuration();
+        if (duration > maxDuration) {
+            maxDuration = duration;
+        }
+    }
+    return maxDuration;
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_pauseAudio(JNIEnv *env, jobject thiz) {
     sPlayer.pause();

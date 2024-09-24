@@ -47,6 +47,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     external fun preparePlayer()
     external fun resetPlayer()
     external fun loadTrack(fileName: String): Int
+    external fun getMaxPlaybackDuration(): Float
     external fun playAudioInternal()
     external fun pauseAudio()
     external fun resumeAudio()
@@ -252,9 +253,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             }
 
             withContext(Dispatchers.Main) {
-                if (!hasErrorOccurred)
+                if (!hasErrorOccurred) {
                     sendArrayEvent("DownloadComplete", audioTracks.map { it.fileName })
-                else resetApp()
+                    sendEvent("MixerDurationSet", getMaxPlaybackDuration())
+                } else resetApp()
             }
         }
     }
@@ -308,10 +310,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun setAudioProgress(progress: Double, promise: Promise) {
         // Pause the mix
         if (!isMixPaused) pauseResumeMix()
-    
+
         // Seek to the new position
         setPosition(progress.toFloat())
-    
+
         promise.resolve(true)
     }
 
@@ -319,7 +321,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun audioSliderChanged(progress: Double, promise: Promise) {
         // Set the new position
         setPosition(progress.toFloat())
-    
+
         // Resume the mix
         pauseResumeMix()
         promise.resolve(true)
@@ -334,7 +336,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             }
         }
     }
-    
+
     private fun updateAmplitudes() {
         if (isMixPaused) return
 
