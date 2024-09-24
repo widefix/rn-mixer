@@ -215,35 +215,31 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
         val urls = urlStrings.toArrayList().map { it.toString() }.map { URL(it) }
 
-        val totalFiles = urls.size
-        var downloadedFiles = 0
+        val totalActions = urls.size
+        var doneActions = 0
         var hasErrorOccurred = false
 
         scope.launch {
             val deferreds = urls.map { url ->
-                async {
+                async(Dispatchers.IO) {  // Run the heavy operations on the IO dispatcher
                     val file = downloadFile(url)
                     if (file == null) {
                         hasErrorOccurred = true
                         sendGenAppErrors("Failed to download file: ${url.path}")
+                    } else {
+                        convertAndAddTrack(file)  // Process the file
                     }
-
                     file
                 }
             }
 
-            val files = deferreds.awaitAll()
-            files.filterNotNull().forEach { file ->
-                val i = file.name.lastIndexOf('.')
-                val substr = file.name.substring(0, i)
-                val outputFile = File(file.parent, "$substr.wav")
-                if (outputFile.exists() && outputFile.totalSpace > 0)
-                    addTrack(outputFile)
-                else convertFile(file, outputFile) { addTrack(it) }
+            deferreds.forEach { deferred ->
+                val file = deferred.await()  // Wait for the file to be processed
 
+                // Once each file is done, update the UI on the main thread
                 withContext(Dispatchers.Main) {
-                    downloadedFiles += 1
-                    downloadProgress = downloadedFiles.toDouble() / totalFiles
+                    doneActions += 1
+                    downloadProgress = doneActions.toDouble() / totalActions
 
                     val progressEvent = Arguments.createMap()
                     progressEvent.putDouble("progress", downloadProgress)
@@ -308,10 +304,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun setAudioProgress(progress: Double, promise: Promise) {
         // Pause the mix
         if (!isMixPaused) pauseResumeMix()
-    
+
         // Seek to the new position
         setPosition(progress.toFloat())
-    
+
         promise.resolve(true)
     }
 
@@ -319,7 +315,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun audioSliderChanged(progress: Double, promise: Promise) {
         // Set the new position
         setPosition(progress.toFloat())
-    
+
         // Resume the mix
         pauseResumeMix()
         promise.resolve(true)
@@ -334,7 +330,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             }
         }
     }
-    
+
     private fun updateAmplitudes() {
         if (isMixPaused) return
 
@@ -415,6 +411,15 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             sendGenAppErrors("Error downloading file: ${e.localizedMessage}")
             null
         }
+    }
+
+    private fun convertAndAddTrack(file: File) {
+        val i = file.name.lastIndexOf('.')
+        val substr = file.name.substring(0, i)
+        val outputFile = File(file.parent, "$substr.wav")
+        if (outputFile.exists() && outputFile.totalSpace > 0)
+            addTrack(outputFile)
+        else convertFile(file, outputFile) { addTrack(it) }
     }
 
     private fun addTrack(track: File) {
