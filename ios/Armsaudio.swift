@@ -42,6 +42,7 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
         return ["DownloadProgress",
                 "DownloadComplete",
                 "AppReset",
+                "MixerDurationSet",
                 "PlaybackProgress",
                 "DownloadErrors",
                 "TracksAmplitudes",
@@ -320,6 +321,12 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
             }
         }
     }
+
+    private func getMixDuration() -> Float {
+        let duration = players.values.first?.duration ?? 0.0
+        return Float(duration)
+    }
+
     // Function to download audio files from URLs
     @objc func downloadAudioFiles(_ urlStrings: [String]) {
         resetApp()
@@ -387,9 +394,11 @@ class Armsaudio: RCTEventEmitter, ObservableObject, AVAudioPlayerDelegate  {
             if hasErrorOccurred {
                 self.resetApp()
             } else {
+                let duration = self.audioPlayers.first?.value.duration ?? 0.0
                 self.isMixBtnClicked = true
                 self.sendProgressUpdate(1.0)
                 self.sendEvent(withName: "DownloadComplete", body: downloadedFileNames)
+                self.sendEvent(withName: "MixerDurationSet", body: duration)
             }
         }
     }

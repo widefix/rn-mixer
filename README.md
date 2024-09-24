@@ -13,7 +13,7 @@ The `Armsaudio` module is a React Native module that provides audio playback, mi
 3. [Usage](#usage)
 
 4. [Android OS](#android)
-   
+
 5. [Contributing](#contributing)
 
 6. [License](#license)
@@ -82,7 +82,7 @@ To install the `Armsaudio` module, follow these steps:
 
 ### Events
 
--  **DownloadProgress**: This event is used to get the progress of the files as the library downloads them internally 
+-  **DownloadProgress**: This event is used to get the progress of the files as the library downloads them internally
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('DownloadProgress', (event) => {
@@ -100,11 +100,13 @@ To install the `Armsaudio` module, follow these steps:
     ...
   ```
 
+- **MixerDurationSet**: Notifies when download is complete and the track duration is known. Sends the track duration in seconds as a float number.
+
 -  **PlaybackProgress**: This event is used to keep track of the mix progress as it's playing, so you can use it to update your playback slider or whatever playback UI you have.
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('PlaybackProgress', (event) => {
-      setplayBackProgress(event.progress); 
+      setplayBackProgress(event.progress);
     });
     ...
   ```
@@ -113,7 +115,7 @@ To install the `Armsaudio` module, follow these steps:
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('DownloadErrors', (event) => {
-      seterrMessage(event.errMsg); 
+      seterrMessage(event.errMsg);
     });
     ...
   ```
@@ -121,7 +123,7 @@ To install the `Armsaudio` module, follow these steps:
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('TracksAmplitudes', (event) => {
-      setAmps(event.amplitudes); 
+      setAmps(event.amplitudes);
     });
     ...
   ```
@@ -129,7 +131,7 @@ To install the `Armsaudio` module, follow these steps:
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('DownloadStart', (event) => {
-      setDwnStart(event.status); 
+      setDwnStart(event.status);
     });
     ...
   ```
@@ -137,7 +139,7 @@ To install the `Armsaudio` module, follow these steps:
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('AppErrorsX', (event) => {
-      setGeneralErrors(event.errMsg); 
+      setGeneralErrors(event.errMsg);
     });
     ...
   ```
@@ -145,7 +147,7 @@ To install the `Armsaudio` module, follow these steps:
   ```javascript
   React.useEffect(() => {
     const subscription = armsaudioEmitter.addListener('AppReset', (event) => {
-      setAppReset(event.status); 
+      setAppReset(event.status);
     });
     ...
   ```
