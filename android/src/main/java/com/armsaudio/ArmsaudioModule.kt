@@ -216,8 +216,8 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
         val urls = urlStrings.toArrayList().map { it.toString() }.map { URL(it) }
 
-        val totalFiles = urls.size
-        var downloadedFiles = 0
+        val totalActions = urls.size
+        var doneActions = 0
         var hasErrorOccurred = false
 
         scope.launch {
@@ -227,24 +227,20 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                     if (file == null) {
                         hasErrorOccurred = true
                         sendGenAppErrors("Failed to download file: ${url.path}")
+                    } else {
+                        convertAndAddTrack(file)
                     }
 
                     file
                 }
             }
 
-            val files = deferreds.awaitAll()
-            files.filterNotNull().forEach { file ->
-                val i = file.name.lastIndexOf('.')
-                val substr = file.name.substring(0, i)
-                val outputFile = File(file.parent, "$substr.wav")
-                if (outputFile.exists() && outputFile.totalSpace > 0)
-                    addTrack(outputFile)
-                else convertFile(file, outputFile) { addTrack(it) }
+            deferreds.forEach { deferred ->
+                val file = deferred.await()
 
                 withContext(Dispatchers.Main) {
-                    downloadedFiles += 1
-                    downloadProgress = downloadedFiles.toDouble() / totalFiles
+                    doneActions += 1
+                    downloadProgress = doneActions.toDouble() / totalActions
 
                     val progressEvent = Arguments.createMap()
                     progressEvent.putDouble("progress", downloadProgress)
@@ -417,6 +413,15 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             sendGenAppErrors("Error downloading file: ${e.localizedMessage}")
             null
         }
+    }
+
+    private fun convertAndAddTrack(file: File) {
+        val i = file.name.lastIndexOf('.')
+        val substr = file.name.substring(0, i)
+        val outputFile = File(file.parent, "$substr.wav")
+        if (outputFile.exists() && outputFile.totalSpace > 0)
+            addTrack(outputFile)
+        else convertFile(file, outputFile) { addTrack(it) }
     }
 
     private fun addTrack(track: File) {
