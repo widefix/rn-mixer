@@ -42,6 +42,7 @@ namespace iolib {
 
         void setPlayMode() { mCurSampleIndex = 0; mIsPlaying = true; }
         void setStopMode() { mIsPlaying = false; mCurSampleIndex = 0; }
+        float getDuration() { return mReader.getNumSampleFrames() / (float)mReader.getSampleRate(); }
 
         bool isPlaying() { return mIsPlaying; }
 
