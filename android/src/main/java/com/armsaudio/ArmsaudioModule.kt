@@ -230,22 +230,20 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                         convertAndAddTrack(file)
                     }
 
+                    withContext(Dispatchers.Main) {
+                        doneActions += 1
+                        downloadProgress = doneActions.toDouble() / totalActions
+
+                        val progressEvent = Arguments.createMap()
+                        progressEvent.putDouble("progress", downloadProgress)
+                        sendEvent("DownloadProgress", progressEvent)
+                    }
+
                     file
                 }
             }
 
-            deferreds.forEach { deferred ->
-                val file = deferred.await()
-
-                withContext(Dispatchers.Main) {
-                    doneActions += 1
-                    downloadProgress = doneActions.toDouble() / totalActions
-
-                    val progressEvent = Arguments.createMap()
-                    progressEvent.putDouble("progress", downloadProgress)
-                    sendEvent("DownloadProgress", progressEvent)
-                }
-            }
+            deferreds.awaitAll()
 
             withContext(Dispatchers.Main) {
                 if (!hasErrorOccurred)
@@ -304,10 +302,10 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun setAudioProgress(progress: Double, promise: Promise) {
         // Pause the mix
         if (!isMixPaused) pauseResumeMix()
-    
+
         // Seek to the new position
         setPosition(progress.toFloat())
-    
+
         promise.resolve(true)
     }
 
@@ -315,7 +313,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
     fun audioSliderChanged(progress: Double, promise: Promise) {
         // Set the new position
         setPosition(progress.toFloat())
-    
+
         // Resume the mix
         pauseResumeMix()
         promise.resolve(true)
@@ -330,7 +328,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
             }
         }
     }
-    
+
     private fun updateAmplitudes() {
         if (isMixPaused) return
 
