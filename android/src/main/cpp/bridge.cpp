@@ -108,9 +108,7 @@ Java_com_armsaudio_ArmsaudioModule_getAmplitudes(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_armsaudio_ArmsaudioModule_setPosition(JNIEnv *env, jobject thiz, jfloat position) {
-    sPlayer.pause();
     sPlayer.setPosition(position);
-    sPlayer.resume();
 }
 
 extern "C"
