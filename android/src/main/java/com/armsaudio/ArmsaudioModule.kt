@@ -308,10 +308,6 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun setAudioProgress(progress: Double, promise: Promise) {
-        // Pause the mix
-        if (!isMixPaused) pauseResumeMix()
-
-        // Seek to the new position
         setPosition(progress.toFloat())
 
         promise.resolve(true)
@@ -319,11 +315,7 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun audioSliderChanged(progress: Double, promise: Promise) {
-        // Set the new position
         setPosition(progress.toFloat())
-
-        // Resume the mix
-        pauseResumeMix()
         promise.resolve(true)
     }
 
