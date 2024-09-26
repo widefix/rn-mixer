@@ -231,20 +231,22 @@ class ArmsaudioModule(reactContext: ReactApplicationContext) :
                         convertAndAddTrack(file)
                     }
 
-                    withContext(Dispatchers.Main) {
-                        doneActions += 1
-                        downloadProgress = doneActions.toDouble() / totalActions
-
-                        val progressEvent = Arguments.createMap()
-                        progressEvent.putDouble("progress", downloadProgress)
-                        sendEvent("DownloadProgress", progressEvent)
-                    }
-
                     file
                 }
             }
 
-            deferreds.awaitAll()
+            deferreds.forEach { deferred ->
+                val file = deferred.await()
+
+                withContext(Dispatchers.Main) {
+                    doneActions += 1
+                    downloadProgress = doneActions.toDouble() / totalActions
+
+                    val progressEvent = Arguments.createMap()
+                    progressEvent.putDouble("progress", downloadProgress)
+                    sendEvent("DownloadProgress", progressEvent)
+                }
+            }
 
             withContext(Dispatchers.Main) {
                 if (!hasErrorOccurred) {
